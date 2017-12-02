@@ -21,7 +21,7 @@ class SupplierHandler:
         return result
 
     def suppliers(self):
-        suppliers = [
+        result = [
             {
                 's_id': 0,
                 'bank_account': 123456788
@@ -43,7 +43,7 @@ class SupplierHandler:
                 'bank_account': 999555111
             }
         ]
-        return suppliers
+        return result
 
     def client(self):
         result = [
@@ -67,4 +67,4 @@ class SupplierHandler:
         return result
 
     def getAllSuppliers(self):
-        return jsonify({'suppliers': self.suppliers()})
+        return jsonify(Suppliers=self.suppliers())
