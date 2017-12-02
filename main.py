@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from handler.supplier import SupplierHandler
-from handler.clientHandler import ClientHandler
+from handler.client import ClientHandler
 from handler.transaction import TransactionHandler
 from handler.announcement import AnnouncementHandler
 from handler.request import RequestHandler
