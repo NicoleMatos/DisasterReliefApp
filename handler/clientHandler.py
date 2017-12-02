@@ -191,15 +191,79 @@ class ClientHandler:
     def getAllClients(self):
         return jsonify({'result': self.searchClientsInUsers()})
 
+
     def getClientById(self, c_id):
-        return 0
+        result = self.searchClientsInUsers()
+        if (c_id >= 0 and c_id <=10):
 
-    def getResourceByClientId(self, c_id):
-        return 0
+            return jsonify(result[0])
+        else:
+            return jsonify(Error = "Client Not Found"), 404
 
-    def searchConsumers(self, args):
-        return 0
 
+    def getSuppliersByClientId(self,c_id):
+        result = self.suppliersDictionary()
+        if (c_id >= 0 and c_id <= 10):
+
+            return jsonify(result[0])
+        else:
+            return jsonify(Error="Client Not Found"), 404
+
+    def getTransactionsByClientId(self,c_id):
+        result = self.transactionsDictionary()
+        if (c_id >= 0 and c_id <= 10):
+
+            return jsonify(result[0])
+        else:
+            return jsonify(Error="Client Not Found"), 404
+
+
+    def getRequestsByClientId(self,c_id):
+        result = self.requestsDictionary()
+        if (c_id >= 0 and c_id <= 10):
+
+            return jsonify(result[0])
+        else:
+            return jsonify(Error="Client Not Found"), 404
+    def getCreditCardsByClientId(self,c_id):
+        result = self.creditCardsDictionary()
+        if (c_id >= 0 and c_id <= 10):
+
+            return jsonify(result[0])
+        else:
+            return jsonify(Error="Client Not Found"), 404
+
+
+
+    #===================================================================================================================
+    #                                           get things by Name
+    #===================================================================================================================
+
+    def getClientByName(self, c_name):
+        result = self.searchClientsInUsers()
+        return jsonify(result[0])
+
+
+    def getSuppliersByClientName(self, c_name):
+        result = self.suppliersDictionary()
+        return jsonify(result[0])
+
+
+    def getTransactionsByClientName(self, c_name):
+        result = self.transactionsDictionary()
+        return jsonify(result[0])
+
+
+    def getRequestsByClientName(self, c_name):
+        result = self.requestsDictionary()
+        return jsonify(result[0])
+
+
+    def getCreditCardsByClientName(self, c_name):
+        result = self.creditCardsDictionary()
+        return jsonify(result[0])
+
+#========================
 
 
 

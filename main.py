@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from handler.supplier import SupplierHandler
-#from handler.client import ClientHandler
+from handler.clientHandler import ClientHandler
 from handler.transaction import TransactionHandler
 from handler.announcement import AnnouncementHandler
 from handler.request import RequestHandler
@@ -22,9 +22,13 @@ def home():
 def getAllSuppliers():
     return SupplierHandler().getAllSuppliers()
 
-#@app.route('/clients/')
-#def getAllClients():
-#    return ClientHandler().getAllClients()
+@app.route('/clients/')
+def getAllClients():
+    return ClientHandler().getAllClients()
+
+@app.route('/clients/<int:c_id>/')
+def getClientById(c_id):
+    return ClientHandler().getClientById(c_id)
 
 @app.route('/transactions/')
 def getAllTransactions():
