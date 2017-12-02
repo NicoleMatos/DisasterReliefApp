@@ -191,7 +191,6 @@ class ClientHandler:
     def getAllClients(self):
         return jsonify({'result': self.searchClientsInUsers()})
 
-
     def getClientById(self, c_id):
         result = self.searchClientsInUsers()
         if (c_id >= 0 and c_id <=10):
@@ -264,6 +263,7 @@ class ClientHandler:
         return jsonify(result[0])
 
 #========================
+
 
 
 
