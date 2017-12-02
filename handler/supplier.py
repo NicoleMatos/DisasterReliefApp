@@ -23,8 +23,24 @@ class SupplierHandler:
     def suppliers(self):
         suppliers = [
             {
+                's_id': 0,
+                'bank_account': 123456788
+            },
+            {
                 's_id': 1,
                 'bank_account': 123456789
+            },
+            {
+                's_id': 2,
+                'bank_account': 987654321
+            },
+            {
+                's_id': 3,
+                'bank_account': 987555321
+            },
+            {
+                's_id': 4,
+                'bank_account': 999555111
             }
         ]
         return suppliers
