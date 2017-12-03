@@ -63,6 +63,7 @@ def getAllUsers():
 
 
 
+
 @app.route('/suppliers/<int:s_id>/')
 def getSupplierByID(s_id):
     return SupplierHandler().getSupplierByID(s_id)
@@ -70,4 +71,6 @@ def getSupplierByID(s_id):
 
 
 if __name__ == '__main__':
-    app.run()
+app.run()
+
+
