@@ -19,8 +19,9 @@ class TransactionHandler:
         ]
         return result
 
-    def getAllTransactions(self):
-        return jsonify(Transactions=self.transaction())
+    # ===================================================================================================================
+    #                                          search for transactions
+    # ===================================================================================================================
 
     def searchTransactions(self, args):
         date = args.get('date')
@@ -33,6 +34,21 @@ class TransactionHandler:
         elif client:
             self.getTransactionsByClient(client)
         return jsonify(self.transaction())
+
+    # ===================================================================================================================
+    #                                           get all transactions
+    # ===================================================================================================================
+
+    def getAllTransactions(self):
+        return jsonify(Transactions=self.transaction())
+
+    # ===================================================================================================================
+    #                                           get things by id
+    # ===================================================================================================================
+
+    def getTransactionByID(self, t_id):
+        result = list(filter(lambda supplier: supplier['t_id'] == t_id, self.transaction()))
+        return jsonify(result)
 
     def getTransactionsByDate(self, date):
         return jsonify(self.transaction())

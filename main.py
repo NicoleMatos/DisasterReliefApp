@@ -31,6 +31,7 @@ def getAllSuppliers():
     else:
         return SupplierHandler().searchSuppliers(request.args)
 
+
 @app.route('/suppliers/<int:s_id>/')
 def getSupplierByID(s_id):
     return SupplierHandler().getSupplierByID(s_id)
@@ -57,10 +58,12 @@ def getAllClients():
     else:
         return ClientHandler().searchClients(request.args)
 
+
 @app.route('/clients/<int:c_id>/')
 def getClientByID(c_id):
     if not request.args:
         return ClientHandler().getClientByID(c_id)
+
 
 @app.route('/clients/<int:c_id>/requests/')
 def getRequestsByClientID(c_id):
@@ -71,22 +74,25 @@ def getRequestsByClientID(c_id):
 def getTransactionsByClientID(c_id):
     return ClientHandler().getTransactionsByClientID(c_id)
 
+
 @app.route('/clients/<int:c_id>/creditcards/')
 def getCCardsByClientID(c_id):
     return ClientHandler().getCCardsByClientID(c_id)
+
 
 # =======================================================================================================================
 #                                           transactions routes
 # =======================================================================================================================
 
-@app.route('/transaction/')
+@app.route('/transactions/')
 def getAllTransactions():
     if not request.args:
         return TransactionHandler().getAllTransactions()
     else:
         return TransactionHandler().searchTransactions(request.args)
 
-@app.route('/transactions/<int:s_id>/')
+
+@app.route('/transactions/<int:t_id>/')
 def getTransactionByID(t_id):
     return TransactionHandler().getTransactionByID(t_id)
 
@@ -103,7 +109,7 @@ def getAllAnnouncements():
         return AnnouncementHandler().searchAnnouncements(request.args)
 
 
-@app.route('/announcement/<int:s_id>/')
+@app.route('/announcement/<int:a_id>/')
 def getAnnouncementByID(a_id):
     return AnnouncementHandler().getAnnouncementByID(a_id)
 
@@ -120,7 +126,7 @@ def getAllRequests():
         return RequestHandler().searchRequests(request.args)
 
 
-@app.route('/requests/<int:s_id>/')
+@app.route('/requests/<int:r_id>/')
 def getRequestByID(r_id):
     return RequestHandler().getRequestByID(r_id)
 
