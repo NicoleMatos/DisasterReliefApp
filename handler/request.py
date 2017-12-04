@@ -1,5 +1,6 @@
 from flask import jsonify
 
+
 class RequestHandler:
 
     def request(self):
@@ -19,3 +20,13 @@ class RequestHandler:
 
     def getAllRequests(self):
         return jsonify(Requests=self.request())
+
+    def searchRequests(self, args):
+        date = args.get('date')
+        result = []
+        if date:
+            self.getRequestsByDate(date)
+        return jsonify(Result=result)
+
+    def getRequestsByDate(self, date):
+        return self.request()
