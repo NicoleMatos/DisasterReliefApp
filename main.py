@@ -11,10 +11,18 @@ from handler.user import UserHandler
 app = Flask(__name__)
 
 
+# =======================================================================================================================
+#                                              home route
+# =======================================================================================================================
+
 @app.route('/')
 def home():
     return 'Disaster Relief'
 
+
+# =======================================================================================================================
+#                                           suppliers routes
+# =======================================================================================================================
 
 @app.route('/suppliers/')
 def getAllSuppliers():
@@ -23,6 +31,24 @@ def getAllSuppliers():
     else:
         return SupplierHandler().searchSuppliers(request.args)
 
+@app.route('/suppliers/<int:s_id>/')
+def getSupplierByID(s_id):
+    return SupplierHandler().getSupplierByID(s_id)
+
+
+@app.route('/suppliers/<int:s_id>/announcements/')
+def getAnnouncementsBySupplierID(s_id):
+    return SupplierHandler().getAnnouncementsBySupplierID(s_id)
+
+
+@app.route('/suppliers/<int:s_id>/transactions/')
+def getTransactionsBySupplierID(s_id):
+    return SupplierHandler().getTransactionsBySupplierID(s_id)
+
+
+# =======================================================================================================================
+#                                           clients routes
+# =======================================================================================================================
 
 @app.route('/clients/')
 def getAllClients():
@@ -31,6 +57,27 @@ def getAllClients():
     else:
         return ClientHandler().searchClients(request.args)
 
+@app.route('/clients/<int:c_id>/')
+def getClientByID(c_id):
+    if not request.args:
+        return ClientHandler().getClientByID(c_id)
+
+@app.route('/clients/<int:c_id>/requests/')
+def getRequestsByClientID(c_id):
+    return ClientHandler().getRequestsByClientID(c_id)
+
+
+@app.route('/clients/<int:c_id>/transactions/')
+def getTransactionsByClientID(c_id):
+    return ClientHandler().getTransactionsByClientID(c_id)
+
+@app.route('/clients/<int:c_id>/creditcards/')
+def getCCardsByClientID(c_id):
+    return ClientHandler().getCCardsByClientID(c_id)
+
+# =======================================================================================================================
+#                                           transactions routes
+# =======================================================================================================================
 
 @app.route('/transaction/')
 def getAllTransactions():
@@ -39,6 +86,14 @@ def getAllTransactions():
     else:
         return TransactionHandler().searchTransactions(request.args)
 
+@app.route('/transactions/<int:s_id>/')
+def getTransactionByID(t_id):
+    return TransactionHandler().getTransactionByID(t_id)
+
+
+# =======================================================================================================================
+#                                           announcements routes
+# =======================================================================================================================
 
 @app.route('/announcements/')
 def getAllAnnouncements():
@@ -48,6 +103,15 @@ def getAllAnnouncements():
         return AnnouncementHandler().searchAnnouncements(request.args)
 
 
+@app.route('/announcement/<int:s_id>/')
+def getAnnouncementByID(a_id):
+    return AnnouncementHandler().getAnnouncementByID(a_id)
+
+
+# =======================================================================================================================
+#                                           requests routes
+# =======================================================================================================================
+
 @app.route('/requests/')
 def getAllRequests():
     if not request.args:
@@ -55,6 +119,15 @@ def getAllRequests():
     else:
         return RequestHandler().searchRequests(request.args)
 
+
+@app.route('/requests/<int:s_id>/')
+def getRequestByID(r_id):
+    return RequestHandler().getRequestByID(r_id)
+
+
+# =======================================================================================================================
+#                                           resources routes
+# =======================================================================================================================
 
 @app.route('/resources/')
 def getAllResources():
@@ -64,6 +137,15 @@ def getAllResources():
         return ResourceHandler().searchResources(request.args)
 
 
+@app.route('/resources/<int:r_id>/')
+def getResourceByID(r_id):
+    return ResourceHandler().getResourceByID(r_id)
+
+
+# =======================================================================================================================
+#                                        credit cards routes
+# =======================================================================================================================
+
 @app.route('/creditcards/')
 def getAllCCards():
     if not request.args:
@@ -71,6 +153,15 @@ def getAllCCards():
     else:
         return CCardHandler().searchCCards(request.args)
 
+
+@app.route('/ccards/<int:cc_id>/')
+def getCCardByID(cc_id):
+    return CCardHandler().getCCardByID(cc_id)
+
+
+# =======================================================================================================================
+#                                           users routes
+# =======================================================================================================================
 
 @app.route('/users/')
 def getAllUsers():
@@ -80,49 +171,14 @@ def getAllUsers():
         return UserHandler().searchUsers(request.args)
 
 
-
-@app.route('/suppliers/<int:s_id>/')
-def getSupplierByID(s_id):
-    if not request.args:
-        return SupplierHandler().getSupplierByID(s_id)
-
-@app.route('/clients/<int:s_id>/')
-def getClientByID(c_id):
-    if not request.args:
-        return ClientHandler().getClientByID(c_id)
-
-@app.route('/transactions/<int:s_id>/')
-def getTransactionByID(t_id):
-    if not request.args:
-        return TransactionHandler().getTransactionByID(t_id)
-
-@app.route('/announcement/<int:s_id>/')
-def getAnnouncementByID(a_id):
-    if not request.args:
-        return AnnouncementHandler().getAnnouncementByID(a_id)
-
-@app.route('/requests/<int:s_id>/')
-def getRequestByID(r_id):
-    if not request.args:
-        return RequestHandler().getRequestByID(r_id)
-
-@app.route('/ccards/<int:cc_id>/')
-def getCCardByID(cc_id):
-    if not request.args:
-        return CCardHandler().getCCardByID(cc_id)
-
-@app.route('/resources/<int:r_id>/')
-def getResourceByID(r_id):
-    if not request.args:
-        return ResourceHandler().getResourceByID(r_id)
-
 @app.route('/suppliers/<int:s_id>/')
 def getUserByID(u_id):
-    if not request.args:
-        return UserHandler().getUserByID(u_id)
+    return UserHandler().getUserByID(u_id)
 
+
+# =======================================================================================================================
+#                                                run
+# =======================================================================================================================
 
 if __name__ == '__main__':
-app.run()
-
-
+    app.run()

@@ -67,10 +67,10 @@ class ResourceHandler:
         return jsonify(resourcesList)
 
 
-    def getResourceByCategoryAndName(self,r_category,r_name):
-
-        resources = self.resource()
-        if(r_category.lower() == 'water' and r_name.lower() == 'nikini water')
-            return jsonify(resources[0])
-        else:
-            return jsonify(resources[1])
+    # def getResourceByCategoryAndName(self,r_category,r_name):
+    #
+    #     resources = self.resource()
+    #     if (r_category.lower() == 'water' and r_name.lower() == 'nikini water')
+    #         return jsonify(resources[0])
+    #     else:
+    #         return jsonify(resources[1])

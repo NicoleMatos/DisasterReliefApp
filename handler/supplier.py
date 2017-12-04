@@ -66,137 +66,86 @@ class SupplierHandler:
         ]
         return users
 
+    # ===================================================================================================================
+    #                                          search for suppliers
+    # ===================================================================================================================
 
     def searchSuppliers(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
+        result = []
         if name and lastname:
-            self.getSupplierByNameAndLastName(name, lastname)
+            result = self.getSupplierByNameAndLastName(name, lastname)
         elif name:
-            self.getSupplierByName(self, name)
+            result = self.getSupplierByName(name)
         elif lastname:
-            self.getSupplierByLastName(self, lastname)
-        return jsonify(self.suppliers())
+            result = self.getSupplierByLastName(lastname)
+        return jsonify(Result=result)
 
-    #===================================================================================================================
+    # ===================================================================================================================
     #                                           get all suppliers
-    #===================================================================================================================
+    # ===================================================================================================================
 
     def getAllSuppliers(self):
         return jsonify(Suppliers=self.searchSuppliersInUsers())
 
-    #===================================================================================================================
+    # ===================================================================================================================
     #                                           get things by id
-    #===================================================================================================================
+    # ===================================================================================================================
 
     def getSupplierByID(self, u_id):
         suppliers = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
         return jsonify(result)
 
-    def getClientsByUserID(self, u_id):
-        suppliers = self.getSupplierByID(self,u_id)
-        return suppliers
+    def getAnnouncementsBySupplierID(self, u_id):
+        suppliers = self.searchSuppliersInUsers()
+        result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
+        return jsonify(result)
 
-    def getTransactionsByUserID(self, u_id):
-        suppliers = self.getSupplierByID(self, u_id)
-        return suppliers
-
-    def getAnnouncementsByUserID(self, u_id):
-        suppliers = self.getSupplierByID(self, u_id)
-        return suppliers
-
-    def getResourcesByUserID(self, u_id):
-        suppliers = self.getSupplierByID(self, u_id)
-        return suppliers
+    def getTransactionsBySupplierID(self, u_id):
+        suppliers = self.searchSuppliersInUsers()
+        result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
+        return jsonify(result)
 
     # ===================================================================================================================
-    #                                           get things by Name
+    #                                           get suppliers by Name
     # ===================================================================================================================
 
     def getSupplierByName(self, name):
         users = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_name'] == name, users))
-        return jsonify(result)
-
-    def getClientsByName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_name'] == name, users))
-        return jsonify(result)
-
-    def getTransactionsByName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_name'] == name, users))
-        return jsonify(result)
-
-    def getAnnouncementsByName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_name'] == name, users))
-        return jsonify(result)
+        return result
 
     # ===================================================================================================================
-    #                                           get things by Last Name
+    #                                           get suppliers by Last Name
     # ===================================================================================================================
 
     def getSupplierByLastName(self, name):
         users = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_lastName'] == name, users))
-        return jsonify(result)
-
-    def getClientsByLastName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_lastName'] == name, users))
-        return jsonify(result)
-
-    def getTransactionsByLastName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_lastName'] == name, users))
-        return jsonify(result)
-
-    def getAnnouncementsByLastName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_lastName'] == name, users))
-        return jsonify(result)
+        return result
 
     # ===================================================================================================================
-    #                                           get things by Name And Last Name
+    #                                           get suppliers by Name And Last Name
     # ===================================================================================================================
 
     def getSupplierByNameAndLastName(self, name, last_name):
         users = self.searchSuppliersInUsers()
         result = list(filter(lambda f_name: f_name['u_name'] == name, users))
         result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
-        return jsonify(result2)
+        return result2
 
-    def getClientsByNameAndLastName(self, name, last_name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
-        return jsonify(result2)
-
-    def getTransactionsByNameAndLastName(self, name, last_name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
-        return jsonify(result2)
-
-    def getAnnouncementsByNameAndLastName(self, name, last_name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
-        return jsonify(result2)
-
-
-    #===================================================================================================================
+    # ===================================================================================================================
     #                                           method to hard-wire information
-    #===================================================================================================================
+    # ===================================================================================================================
 
-    # def searchSuppliersInUsers(self):
-    #     suppliersDic = self.suppliers()
-    #     usersDic = self.users()
-    #     result = []
-    #     for i in suppliersDic:
-    #         for j in usersDic:
-    #             if (i['u_id'] == j['u_id']):
-    #                 result.append(j)
-    #     return result
+    def searchSuppliersInUsers(self):
+        suppliersDic = self.suppliers()
+        usersDic = self.users()
+        result = []
+        for i in suppliersDic:
+            for j in usersDic:
+                if (i['u_id'] == j['u_id']):
+                    result.append(j)
+        return result
