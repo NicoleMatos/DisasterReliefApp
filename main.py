@@ -18,56 +18,73 @@ def home():
 
 @app.route('/suppliers/')
 def getAllSuppliers():
-    name = request.args.get('name')
-    lastname = request.args.get('lastname')
-    if name:
-        return SupplierHandler().getSupplierByName(name)
-    if lastname:
-        return SupplierHandler().getSupplierByNameAndLastName(name, lastname)
-    return SupplierHandler().getAllSuppliers()
+    if not request.args:
+        return SupplierHandler().getAllSuppliers()
+    else:
+        return SupplierHandler().searchSuppliers(request.args)
 
 
 @app.route('/clients/')
 def getAllClients():
-    return ClientHandler().getAllClients()
+    if not request.args:
+        return ClientHandler().getAllClients()
+    else:
+        return ClientHandler().searchClients(request.args)
 
 
 @app.route('/transaction/')
 def getAllTransactions():
-    return TransactionHandler().getAllTransactions()
+    if not request.args:
+        return TransactionHandler().getAllTransactions()
+    else:
+        return TransactionHandler().searchTransactions(request.args)
 
 
 @app.route('/announcements/')
 def getAllAnnouncements():
-    return AnnouncementHandler().getAllAnnouncements()
+    if not request.args:
+        return AnnouncementHandler().getAllAnnouncements()
+    else:
+        return AnnouncementHandler().searchAnnouncements(request.args)
 
 
 @app.route('/requests/')
 def getAllRequests():
-    return RequestHandler().getAllRequests()
+    if not request.args:
+        return RequestHandler().getAllRequests()
+    else:
+        return RequestHandler().searchRequests(request.args)
 
 
 @app.route('/resources/')
 def getAllResources():
-    return ResourceHandler().getAllResources()
+    if not request.args:
+        return ResourceHandler().getAllResources()
+    else:
+        return ResourceHandler().searchResources(request.args)
 
 
 @app.route('/creditcards/')
 def getAllCCards():
-    return CCardHandler().getAllCCards()
+    if not request.args:
+        return CCardHandler().getAllCCards()
+    else:
+        return CCardHandler().searchCCards(request.args)
 
 
 @app.route('/users/')
 def getAllUsers():
-    return UserHandler().getAllUsers()
-
+    if not request.args:
+        return UserHandler().getAllUsers()
+    else:
+        return UserHandler().searchUsers(request.args)
 
 
 
 @app.route('/suppliers/<int:s_id>/')
 def getSupplierByID(s_id):
-    return SupplierHandler().getSupplierByID(s_id)
-
+    if not request.args:
+        return SupplierHandler().getSupplierByID(s_id)
 
 
 if __name__ == '__main__':
