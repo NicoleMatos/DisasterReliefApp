@@ -31,3 +31,23 @@ class UserHandler:
 
     def getAllUsers(self):
         return jsonify(Users=self.user())
+
+    def searchUsers(self, args):
+        name = args.get('name')
+        lastname = args.get('lastname')
+        if name and lastname:
+            self.getUserByNameAndLastName(name, lastname)
+        elif name:
+            self.getUserByName(self, name)
+        elif lastname:
+            self.getUserByLastName(self, lastname)
+        return jsonify(self.users())
+
+    def getUserByName(self, name):
+        return jsonify(self.user())
+
+    def getUserByLastName(self, lastname):
+        return jsonify(self.user())
+
+    def getUserByNameAndLastName(self, name, lastname):
+        return jsonify(self.user())

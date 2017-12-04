@@ -23,10 +23,8 @@ class RequestHandler:
 
     def searchRequests(self, args):
         date = args.get('date')
-        result = []
         if date:
             self.getRequestsByDate(date)
-        return jsonify(Result=result)
 
     def getRequestsByDate(self, date):
         return self.request()
