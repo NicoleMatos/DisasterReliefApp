@@ -32,6 +32,7 @@ class TransactionHandler:
             self.getTransactionsBySupplier(supplier)
         elif client:
             self.getTransactionsByClient(client)
+        return jsonify(self.transaction())
 
     def getTransactionsByDate(self, date):
         return jsonify(self.transaction())

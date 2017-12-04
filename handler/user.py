@@ -32,6 +32,7 @@ class UserHandler:
     def getAllUsers(self):
         return jsonify(Users=self.user())
 
+
     def searchUsers(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
