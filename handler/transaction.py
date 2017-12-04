@@ -21,3 +21,23 @@ class TransactionHandler:
 
     def getAllTransactions(self):
         return jsonify(Transactions=self.transaction())
+
+    def searchTransactions(self, args):
+        date = args.get('date')
+        supplier = args.get('supplier')
+        client = args.get('client')
+        if date:
+            self.getTransactionsByDate(date)
+        elif supplier:
+            self.getTransactionsBySupplier(supplier)
+        elif client:
+            self.getTransactionsByClient(client)
+
+    def getTransactionsByDate(self, date):
+        return jsonify(self.transaction())
+
+    def getTransactionsBySupplier(self, date):
+        return jsonify(self.transaction())
+
+    def getTransactionsByClient(self, date):
+        return jsonify(self.transaction())
