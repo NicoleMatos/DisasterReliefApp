@@ -53,8 +53,8 @@ class TransactionHandler:
     def getTransactionsByDate(self, date):
         return jsonify(self.transaction())
 
-    def getTransactionsBySupplier(self, date):
+    def getTransactionsBySupplier(self, supplier):
         return jsonify(self.transaction())
 
-    def getTransactionsByClient(self, date):
+    def getTransactionsByClient(self, client):
         return jsonify(self.transaction())
