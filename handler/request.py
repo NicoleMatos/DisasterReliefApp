@@ -18,8 +18,10 @@ class RequestHandler:
         ]
         return result
 
-    def getAllRequests(self):
-        return jsonify(Requests=self.request())
+
+    # ===================================================================================================================
+    #                                          search for requests
+    # ===================================================================================================================
 
     def searchRequests(self, args):
         client = args.get('client')
@@ -32,6 +34,21 @@ class RequestHandler:
             self.getRequestsByDate(date)
         else:
             return jsonify(self.request())
+
+    # ===================================================================================================================
+    #                                           get all transactions
+    # ===================================================================================================================
+
+    def getAllRequests(self):
+        return jsonify(Requests=self.request())
+
+    # ===================================================================================================================
+    #                                           get things by id
+    # ===================================================================================================================
+
+    def getRequestByID(self, r_id):
+        result = list(filter(lambda supplier: supplier['r_id'] == r_id, self.request()))
+        return jsonify(result)
 
     def getRequestsByClientAndDate(self, client, date):
         return jsonify(self.request())
