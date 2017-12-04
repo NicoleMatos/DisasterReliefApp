@@ -21,3 +21,24 @@ class CCardHandler:
 
     def getAllCCards(self):
         return jsonify(CCards=self.ccard())
+
+    def searchCCards(self, args):
+        name = args.get('name')
+        lastname = args.get('lastname')
+        if name and lastname:
+            self.getCCardByNameAndLastName(name, lastname)
+        elif name:
+            self.getCCardByName(self, name)
+        elif lastname:
+            self.getCCardByLastName(self, lastname)
+        return jsonify(self.ccard())
+
+
+    def getCCardByName(self, name, lastname):
+        return jsonify(self.ccard())
+
+    def getCCardByLastName(self, name, lastname):
+        return jsonify(self.ccard())
+
+    def getCCardByNameAndLastName(self, name, lastname):
+        return jsonify(self.ccard())
