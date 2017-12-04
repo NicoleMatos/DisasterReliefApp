@@ -22,9 +22,22 @@ class RequestHandler:
         return jsonify(Requests=self.request())
 
     def searchRequests(self, args):
+        client = args.get('client')
         date = args.get('date')
-        if date:
+        if date and client:
+            self.getRequestsByClientAndDate(client, date)
+        elif client:
+            self.getRequestsByClient(client)
+        elif date:
             self.getRequestsByDate(date)
+        else:
+            return jsonify(self.request())
+
+    def getRequestsByClientAndDate(self, client, date):
+        return jsonify(self.request())
+
+    def getRequestsByClient(self, client):
+        return jsonify(self.request())
 
     def getRequestsByDate(self, date):
-        return self.request()
+        return jsonify(self.request())

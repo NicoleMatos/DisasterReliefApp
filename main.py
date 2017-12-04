@@ -86,6 +86,41 @@ def getSupplierByID(s_id):
     if not request.args:
         return SupplierHandler().getSupplierByID(s_id)
 
+@app.route('/clients/<int:s_id>/')
+def getClientByID(c_id):
+    if not request.args:
+        return ClientHandler().getClientByID(c_id)
+
+@app.route('/transactions/<int:s_id>/')
+def getTransactionByID(t_id):
+    if not request.args:
+        return TransactionHandler().getTransactionByID(t_id)
+
+@app.route('/announcement/<int:s_id>/')
+def getAnnouncementByID(a_id):
+    if not request.args:
+        return AnnouncementHandler().getAnnouncementByID(a_id)
+
+@app.route('/requests/<int:s_id>/')
+def getRequestByID(r_id):
+    if not request.args:
+        return RequestHandler().getRequestByID(r_id)
+
+@app.route('/ccards/<int:cc_id>/')
+def getCCardByID(cc_id):
+    if not request.args:
+        return CCardHandler().getCCardByID(cc_id)
+
+@app.route('/resources/<int:r_id>/')
+def getResourceByID(r_id):
+    if not request.args:
+        return ResourceHandler().getResourceByID(r_id)
+
+@app.route('/suppliers/<int:s_id>/')
+def getUserByID(u_id):
+    if not request.args:
+        return UserHandler().getUserByID(u_id)
+
 
 if __name__ == '__main__':
 app.run()

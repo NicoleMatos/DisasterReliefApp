@@ -25,3 +25,24 @@ class AnnouncementHandler:
 
     def getAllAnnouncements(self):
         return jsonify(Announcements=self.announcement())
+
+    def searchAnnouncements(self, args):
+        supplier = args.get('supplier')
+        date = args.get('date')
+        if date and supplier:
+            self.getAnnouncementsBySupplierAndDate(supplier, date)
+        elif supplier:
+            self.getAnnouncementsBySupplier(supplier)
+        elif date:
+            self.getAnnouncementsByDate(date)
+        else:
+            return jsonify(self.request())
+
+    def getAnnouncementsBySupplierAndDate(self, supplier, date):
+        return jsonify(self.request())
+
+    def getAnnouncementsBySupplier(self, supplier):
+        return jsonify(self.request())
+
+    def getAnnouncementsByDate(self, date):
+        return jsonify(self.request())
