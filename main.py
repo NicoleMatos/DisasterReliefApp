@@ -3,10 +3,12 @@ from handler.supplier import SupplierHandler
 from handler.client import ClientHandler
 from handler.transaction import TransactionHandler
 from handler.announcement import AnnouncementHandler
+from handler.administrator import AdministratorHandler
 from handler.request import RequestHandler
 from handler.resource import ResourceHandler
 from handler.ccard import CCardHandler
 from handler.user import UserHandler
+
 
 app = Flask(__name__)
 
@@ -17,7 +19,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Disaster Relief'
+    return 'Disaster Relief \n Welcome Manuel Rodriguez! \n Hope you enjoy it.'
 
 
 # =======================================================================================================================
@@ -180,6 +182,22 @@ def getAllUsers():
 @app.route('/suppliers/<int:s_id>/')
 def getUserByID(u_id):
     return UserHandler().getUserByID(u_id)
+
+# =======================================================================================================================
+#                                           administrators routes
+# =======================================================================================================================
+
+@app.route('/administrators/')
+def getAllAdministrators():
+    if not request.args:
+        return AdministratorHandler.getAllAdministrators()
+    else:
+        return AdministratorHandler.searchAdministrator(request.args)
+
+
+@app.route('/administrators/<int:a_id>/')
+def getAdministratorByID(a_id):
+    return AdministratorHandler.getAdministratorByID(a_id)
 
 
 # =======================================================================================================================

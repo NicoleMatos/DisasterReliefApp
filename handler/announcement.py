@@ -58,7 +58,9 @@ class AnnouncementHandler:
     def getAnnouncementByID(self, a_id):
         ann = self.announcement()
         result = list(filter(lambda announcement: announcement['a_id'] == a_id, ann))
-        return jsonify(result)
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="Announcement Not Found"), 404
 
     # ===================================================================================================================
     #                                      get announcements by Supplier
@@ -84,6 +86,6 @@ class AnnouncementHandler:
 
     def getAnnouncementsBySupplierAndDate(self, supplier, date):
         ann = self.announcement()
-        result = list(filter(lambda resource: resource['s_id'] == supplier, ann))
-        result2 = list(filter(lambda resource: resource['a_date'] == date, result))
+        result = list(filter(lambda announcement: announcement['s_id'] == supplier, ann))
+        result2 = list(filter(lambda announcement: announcement['a_date'] == date, result))
         return result2

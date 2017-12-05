@@ -78,7 +78,7 @@ class SupplierHandler:
         elif lastname:
             result = self.getSupplierByLastName(lastname)
         if len(result) == 0:
-            return jsonify(Error="Client Not Found"), 404
+            return jsonify(Error="Supplier Not Found"), 404
         return jsonify(Result=result)
 
     # ===================================================================================================================
@@ -95,16 +95,22 @@ class SupplierHandler:
     def getSupplierByID(self, u_id):
         suppliers = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
+        if len(result) == 0:
+            return jsonify(Error="Supplier Not Found"), 404
         return jsonify(result)
 
     def getAnnouncementsBySupplierID(self, u_id):
         suppliers = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
+        if len(result) == 0:
+            return jsonify(Error="Announcement Not Found"), 404
         return jsonify(result)
 
     def getTransactionsBySupplierID(self, u_id):
         suppliers = self.searchSuppliersInUsers()
         result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
+        if len(result) == 0:
+            return jsonify(Error="Transaction Not Found"), 404
         return jsonify(result)
 
     # ===================================================================================================================
@@ -130,9 +136,9 @@ class SupplierHandler:
     # ===================================================================================================================
 
     def getSupplierByNameAndLastName(self, name, last_name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
+        suppliers = self.searchSuppliersInUsers()
+        result = list(filter(lambda supplier: supplier['u_name'] == name, suppliers))
+        result2 = list(filter(lambda supplier: supplier['u_lastName'] == last_name, result))
         return result2
 
     # ===================================================================================================================
@@ -145,6 +151,6 @@ class SupplierHandler:
         result = []
         for i in suppliersDic:
             for j in usersDic:
-                if (i['u_id'] == j['u_id']):
+                if i['u_id'] == j['u_id']:
                     result.append(j)
         return result

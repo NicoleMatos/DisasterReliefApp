@@ -36,7 +36,7 @@ class CCardHandler:
         elif lastname:
             result = self.getCCardByLastName(self, lastname)
         if len(result)== 0:
-            return jsonify(Error="Client Not Found"), 404
+            return jsonify(Error="Credit Card Not Found"), 404
         return jsonify(Result=result)
 
     # ===================================================================================================================
@@ -45,6 +45,18 @@ class CCardHandler:
 
     def getAllCCards(self):
         return jsonify(CCards=self.ccard())
+
+    # ===================================================================================================================
+    #                                           get credit cards by id
+    # ===================================================================================================================
+
+
+    def getCCardByID(self,cc_id):
+        ccards = self.ccard()
+        result = list(filter(lambda card: card['cc_id'] == cc_id, ccards))
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="Credit Card Not Found"), 404
 
     # ===================================================================================================================
     #                                         get credit cards by name
@@ -71,5 +83,5 @@ class CCardHandler:
     def getCCardByNameAndLastName(self, name, lastname):
         ccard = self.ccard()
         result = list(filter(lambda card: card['cc_name'] == name, ccard))
-        result2 = list(filter(lambda card1: card1['cc_lastName'] == lastname, result))
+        result2 = list(filter(lambda card: card['cc_lastName'] == lastname, result))
         return result2

@@ -34,7 +34,7 @@ class ResourceHandler:
             result = self.getResourceByCategory(category)
         elif name:
             result = self.getResourceByName(name)
-        if not result:
+        if len(result) == 0:
             return jsonify(Error="Resource Not Found"), 404
         return jsonify(Result=result)
 

@@ -194,14 +194,14 @@ class ClientHandler:
             result = self.getClientByName(name)
         elif lastname:
            result = self.getClientByLastName(lastname)
-        if (len(result) == 0):
+        if len(result) == 0:
             return jsonify(Error="Client Not Found"), 404
-        return jsonify(Result = result)
+        return jsonify(Result=result)
 
 
-    #=======================================================================================================================
+    #===================================================================================================================
     #                                          Get all Clients
-    #=======================================================================================================================
+    #===================================================================================================================
 
     def getAllClients(self):
         return jsonify(Clients = self.searchClientsInUsers())
@@ -213,37 +213,36 @@ class ClientHandler:
     def getTransactionsByClientID(self,u_id):
         clients = self.searchClientsInUsers()
         result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if (len(result)== 0):
-            return jsonify(Error="Client Not Found"), 404
+        if len(result)== 0:
+            return jsonify(Error="Transaction Not Found"), 404
         return jsonify(result)
 
     def getRequestsByClientID(self,u_id):
         clients = self.searchClientsInUsers()
         result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if (len(result) == 0):
-            return jsonify(Error="Client Not Found"), 404
+        if len(result) == 0:
+            return jsonify(Error="Request Not Found"), 404
         return jsonify(result)
 
     def getCreditCardsByClientID(self,u_id):
         clients = self.searchClientsInUsers()
         result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if (len(result) == 0):
-            return jsonify(Error="Client Not Found"), 404
+        if len(result) == 0:
+            return jsonify(Error="Credit Card Not Found"), 404
         return jsonify(result)
 
     def getSuppliersByClientID(self,u_id):
         clients = self.searchClientsInUsers()
         result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if (len(result) == 0):
-            return jsonify(Error="Client Not Found"), 404
+        if len(result) == 0:
+            return jsonify(Error="Supplier Not Found"), 404
         return jsonify(result)
 
 
-
-    def getClientByID(self,u_id):
+    def getClientByID(self, u_id):
         clients = self.searchClientsInUsers()
         result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if (len(result) == 0):
+        if len(result) == 0:
             return jsonify(Error="Client Not Found"), 404
         return jsonify(result)
 
@@ -251,9 +250,6 @@ class ClientHandler:
     # ===================================================================================================================
     #                                           get clients by Name
     # ===================================================================================================================
-
-
-
 
     def getClientByName(self, c_name):
         clients = self.searchClientsInUsers()
@@ -275,10 +271,9 @@ class ClientHandler:
 
     def getClientByNameAndLastName(self, name, last_name):
         clients = self.searchClientsInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, clients))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
+        result = list(filter(lambda client: client['u_name'] == name, clients))
+        result2 = list(filter(lambda client: client['u_lastName'] == last_name, result))
         return result2
-
 
     # ===================================================================================================================
     #                                           method to hard-wire information
@@ -290,6 +285,6 @@ class ClientHandler:
         result = []
         for i in clientsDic:
             for j in usersDic:
-                if (i['u_id'] == j['u_id']):
+                if i['u_id'] == j['u_id']:
                     result.append(j)
         return result

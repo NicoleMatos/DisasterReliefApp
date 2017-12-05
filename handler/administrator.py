@@ -5,11 +5,11 @@ class AdministratorHandler:
     def administrator(self):
         result = [
             {
-                'a_id': 0,
+                'ad_id': 0,
                 'u_id': 0
             },
             {
-                'a_id': 1,
+                'ad_id': 1,
                 'u_id':1
             }
         ]
@@ -71,16 +71,31 @@ class AdministratorHandler:
         elif lastname:
             result = self.getAdministratorByLastName(self, lastname)
         if len(result) == 0:
-            return jsonify(Error="Client Not Found"), 404
+            return jsonify(Error="Administrator Not Found"), 404
         return jsonify(Result=result)
 
     # ===================================================================================================================
-    #                                           get all suppliers
+    #                                           get all administrators
     # ===================================================================================================================
 
 
     def getAllAdministrators(self):
         return jsonify(Administrators=self.searchAdministratosInUsers())
+
+
+
+    # ===================================================================================================================
+    #                                           get administrator by ID
+    # ===================================================================================================================
+
+
+    def getAdministratorByID(self,ad_id):
+        administrators = self.searchAdministratosInUsers()
+        result = list(filter(lambda admi: admi['ad_id'] == ad_id, administrators))
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="Administrator Not Found"), 404
+
 
     # ===================================================================================================================
     #                                           get administrator by Name
@@ -106,8 +121,8 @@ class AdministratorHandler:
 
     def getAdministratorByNameAndLastName(self, name, lastname):
         admi = self.searchAdministratosInUsers()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, admi))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == lastname, result))
+        result = list(filter(lambda admin: admin['u_name'] == name, admi))
+        result2 = list(filter(lambda admin: admin['u_lastName'] == lastname, result))
         return result2
 
     # ===================================================================================================================
