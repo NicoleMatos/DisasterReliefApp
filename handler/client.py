@@ -1,4 +1,5 @@
 from flask import jsonify
+from handler.supplier import SupplierHandler
 
 
 # Class that handles the Consumer
@@ -17,6 +18,12 @@ class ClientHandler:
                 'c_id': 1,
                 'u_id': 3
 
+            },
+
+            {
+                'c_id': 2,
+                'u_id': 3
+
             }
 
         ]
@@ -29,7 +36,6 @@ class ClientHandler:
                 'u_id': 1,
                 'u_email': 'jose.rivera@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Jose',
                 'u_lastName':'Rivera',
                 'u_address': 'Carr.123 km 0.8',
@@ -42,7 +48,6 @@ class ClientHandler:
                 'u_id': 2,
                 'u_email': 'orla.torres@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Orlando',
                 'u_lastName': 'Torres',
                 'u_address': 'Carr.123 km 0.8',
@@ -55,7 +60,6 @@ class ClientHandler:
                 'u_id': 3,
                 'u_email': 'nico.matos@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Nicole',
                 'u_lastName': 'Matos',
                 'u_address': 'Carr.123 km 0.8',
@@ -71,17 +75,18 @@ class ClientHandler:
 
             {
                 's_id': 0,
-                'bank_account': 123456789
+                'u_id': 0,
+                'bank_account': 123456788
             },
-
             {
                 's_id': 1,
-                'bank_account': 234567890
+                'u_id': 1,
+                'bank_account': 123456789
             },
-
             {
                 's_id': 2,
-                'bank_account': 345678901
+                'u_id': 2,
+                'bank_account': 987654321
             }
 
         ]
@@ -175,97 +180,116 @@ class ClientHandler:
         ]
         return cCards
 
+    # ===================================================================================================================
+    #                                          search for clients
+    # ===================================================================================================================
+
+    def searchClients(self, args):
+        name = args.get('name')
+        lastname = args.get('lastname')
+        result = []
+        if name and lastname:
+            result = self.getClientByNameAndLastName(name, lastname)
+        elif name:
+            result = self.getClientByName(name)
+        elif lastname:
+           result = self.getClientByLastName(lastname)
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(Result = result)
+
+
+    #=======================================================================================================================
+    #                                          Get all Clients
+    #=======================================================================================================================
+
+    def getAllClients(self):
+        return jsonify(Clients = self.searchClientsInUsers())
+
+    # ===================================================================================================================
+    #                                           get things by id
+    # ===================================================================================================================
+
+    def getTransactionsByClientID(self,u_id):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_id'] == u_id, clients))
+        if (len(result)== 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(result)
+
+    def getRequestsByClientID(self,u_id):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_id'] == u_id, clients))
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(result)
+
+    def getCreditCardsByClientID(self,u_id):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_id'] == u_id, clients))
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(result)
+
+    def getSuppliersByClientID(self,u_id):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_id'] == u_id, clients))
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(result)
+
+
+
+    def getClientByID(self,u_id):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_id'] == u_id, clients))
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(result)
+
+
+    # ===================================================================================================================
+    #                                           get clients by Name
+    # ===================================================================================================================
+
+
+
+
+    def getClientByName(self, c_name):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_name'] == c_name, clients))
+        return result
+
+    # ===================================================================================================================
+    #                                           get client by Last Name
+    # ===================================================================================================================
+
+    def getClientByLastName(self, c_lastname):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda client: client['u_lastName'] == c_lastname, clients))
+        return result
+
+    # ===================================================================================================================
+    #                                           get client by Name And Last Name
+    # ===================================================================================================================
+
+    def getClientByNameAndLastName(self, name, last_name):
+        clients = self.searchClientsInUsers()
+        result = list(filter(lambda f_name: f_name['u_name'] == name, clients))
+        result2 = list(filter(lambda l_name: l_name['u_lastName'] == last_name, result))
+        return result2
+
+
+    # ===================================================================================================================
+    #                                           method to hard-wire information
+    # ===================================================================================================================
 
     def searchClientsInUsers(self):
-
-        clientDic = self.clientsDictionary()
+        clientsDic = self.clientsDictionary()
         usersDic = self.usersDictionary()
-        result =[]
-
-        for i in clientDic:
+        result = []
+        for i in clientsDic:
             for j in usersDic:
                 if (i['u_id'] == j['u_id']):
                     result.append(j)
         return result
-
-    def getAllClients(self):
-        return jsonify({'result': self.searchClientsInUsers()})
-
-    def getClientById(self, c_id):
-        result = self.searchClientsInUsers()
-        if (c_id >= 0 and c_id <=10):
-
-            return jsonify(result[0])
-        else:
-            return jsonify(Error = "Client Not Found"), 404
-
-
-    def getSuppliersByClientId(self,c_id):
-        result = self.suppliersDictionary()
-        if (c_id >= 0 and c_id <= 10):
-
-            return jsonify(result[0])
-        else:
-            return jsonify(Error="Client Not Found"), 404
-
-    def getTransactionsByClientId(self,c_id):
-        result = self.transactionsDictionary()
-        if (c_id >= 0 and c_id <= 10):
-
-            return jsonify(result[0])
-        else:
-            return jsonify(Error="Client Not Found"), 404
-
-
-    def getRequestsByClientId(self,c_id):
-        result = self.requestsDictionary()
-        if (c_id >= 0 and c_id <= 10):
-
-            return jsonify(result[0])
-        else:
-            return jsonify(Error="Client Not Found"), 404
-    def getCreditCardsByClientId(self,c_id):
-        result = self.creditCardsDictionary()
-        if (c_id >= 0 and c_id <= 10):
-
-            return jsonify(result[0])
-        else:
-            return jsonify(Error="Client Not Found"), 404
-
-
-
-    #===================================================================================================================
-    #                                           get things by Name
-    #===================================================================================================================
-
-    def getClientByName(self, c_name):
-        result = self.searchClientsInUsers()
-        return jsonify(result[0])
-
-
-    def getSuppliersByClientName(self, c_name):
-        result = self.suppliersDictionary()
-        return jsonify(result[0])
-
-
-    def getTransactionsByClientName(self, c_name):
-        result = self.transactionsDictionary()
-        return jsonify(result[0])
-
-
-    def getRequestsByClientName(self, c_name):
-        result = self.requestsDictionary()
-        return jsonify(result[0])
-
-
-    def getCreditCardsByClientName(self, c_name):
-        result = self.creditCardsDictionary()
-        return jsonify(result[0])
-
-#========================
-
-
-
-
-
-
