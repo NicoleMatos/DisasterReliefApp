@@ -31,13 +31,16 @@ class TransactionHandler:
         date = args.get('date')
         supplier = args.get('supplier')
         client = args.get('client')
+        result = []
         if date:
-            self.getTransactionsByDate(date)
+            result = self.getTransactionsByDate(date)
         elif supplier:
-            self.getTransactionsBySupplier(supplier)
+            result = self.getTransactionsBySupplier(supplier)
         elif client:
-            self.getTransactionsByClient(client)
-        return jsonify(self.transaction())
+            result = self.getTransactionsByClient(client)
+        if len(result) == 0:
+            return jsonify(Error="Transaction Not Found"), 404
+        return jsonify(Result=result)
 
     # ===================================================================================================================
     #                                           get all transactions
@@ -52,7 +55,9 @@ class TransactionHandler:
 
     def getTransactionByID(self, t_id):
         result = list(filter(lambda transaction: transaction['t_id'] == t_id, self.transaction()))
-        return jsonify(result)
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="Transaction Not Found"), 404
 
     # ===================================================================================================================
     #                                           get transactions by date

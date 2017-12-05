@@ -28,14 +28,16 @@ class RequestHandler:
     def searchRequests(self, args):
         client = args.get('client')
         date = args.get('date')
+        result = []
         if date and client:
-            self.getRequestsByClientAndDate(client, date)
+            result = self.getRequestsByClientAndDate(client, date)
         elif client:
-            self.getRequestsByClient(client)
+            result = self.getRequestsByClient(client)
         elif date:
-            self.getRequestsByDate(date)
-        else:
-            return jsonify(self.request())
+            result = self.getRequestsByDate(date)
+        if len(result) == 0:
+            return jsonify(Error="Request Not Found"), 404
+        return jsonify(Result=result)
 
     # ===================================================================================================================
     #                                           get all transactions
@@ -48,8 +50,10 @@ class RequestHandler:
     #                                           get things by id
     # ===================================================================================================================
 
-    def getRequestByID(self, r_id):
-        result = list(filter(lambda supplier: supplier['r_id'] == r_id, self.request()))
+    def getRequestByID(self, req_id):
+        result = list(filter(lambda request: request['req_id'] == req_id, self.request()))
+        if len(result) == 0:
+            return jsonify(Error="Request Not Found"), 404
         return jsonify(result)
 
     # ===================================================================================================================
@@ -57,7 +61,7 @@ class RequestHandler:
     # ===================================================================================================================
 
     def getRequestsByClient(self, client):
-        result = list(filter(lambda transaction: transaction['c_id'] == client, self.request()))
+        result = list(filter(lambda request: request['c_id'] == client, self.request()))
         return result
 
     # ===================================================================================================================
@@ -65,7 +69,7 @@ class RequestHandler:
     # ===================================================================================================================
 
     def getRequestsByDate(self, date):
-        result = list(filter(lambda transaction: transaction['req_date'] == date, self.request()))
+        result = list(filter(lambda request: request['req_date'] == date, self.request()))
         return result
 
     # ===================================================================================================================
@@ -73,6 +77,6 @@ class RequestHandler:
     # ===================================================================================================================
 
     def getRequestsByClientAndDate(self, client, date):
-        result = list(filter(lambda resource: resource['c_id'] == client, self.request()))
-        result2 = list(filter(lambda resource: resource['req_date'] == date, result))
+        result = list(filter(lambda request: request['c_id'] == client, self.request()))
+        result2 = list(filter(lambda request: request['req_date'] == date, result))
         return result2

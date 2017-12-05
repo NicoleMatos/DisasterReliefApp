@@ -61,7 +61,7 @@ class UserHandler:
         elif location:
             result = self.getUserByLocation(location)
         if (len(result) == 0):
-            return jsonify(Error="Client Not Found"), 404
+            return jsonify(Error="User Not Found"), 404
         return jsonify(Result = result)
 
 
@@ -70,6 +70,17 @@ class UserHandler:
     # ===================================================================================================================
     def getAllUsers(self):
         return jsonify(Users=self.user())
+
+    # ===================================================================================================================
+    #                                           get Users by ID
+    # ===================================================================================================================
+
+    def getCCardByID(self, u_id):
+        users = self.user()
+        result = list(filter(lambda user: user['u_id'] == u_id, users))
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="User Not Found"), 404
 
     # ===================================================================================================================
     #                                           get users by Name
@@ -95,8 +106,8 @@ class UserHandler:
 
     def getUserByNameAndLastName(self, name, lastname):
         users = self.user()
-        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
-        result2 = list(filter(lambda l_name: l_name['u_lastName'] == lastname, result))
+        result = list(filter(lambda user: user['u_name'] == name, users))
+        result2 = list(filter(lambda user: user['u_lastName'] == lastname, result))
         return result2
 
     # ===================================================================================================================
