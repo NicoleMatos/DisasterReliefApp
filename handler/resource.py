@@ -1,5 +1,6 @@
 from flask import jsonify
 
+
 class ResourceHandler:
 
     def resource(self):
@@ -19,53 +20,48 @@ class ResourceHandler:
         ]
         return result
 
+    # ===================================================================================================================
+    #                                          search for resources
+    # ===================================================================================================================
 
-
+    def searchResources(self,args):
+        category = args.get('category')
+        name = args.get('name')
+        result = []
+        if category:
+            result = self.getResourceByCategory(category)
+        elif name:
+            result = self.getResourceByName(name)
+        if not result:
+            return jsonify(Error="Resource Not Found"), 404
+        return jsonify(Result = result)
+    # ===================================================================================================================
+    #                                           get all suppliers
+    # ===================================================================================================================
     def getAllResources(self):
         return jsonify(Resources=self.resource())
 
-    def getResourceByRid(self,r_id):
+    # Get Resource by ID
 
+    def getResourceByID(self,r_id):
         resources = self.resource()
-        if(r_id == 0):
-            return jsonify(resources[0])
-        else:
-            return jsonify(resources[1])
+        result = list(filter(lambda resource: resource['r_id'] == r_id, resources))
+        if len(result) > 0:
+            return jsonify(Result=result)
+        return jsonify(Error="Resource Not Found"), 404
 
 
+    # Get Resource by Category
     def getResourceByCategory(self,r_category):
-
         resources = self.resource()
-        if(r_category.lower() == 'water'):
-            return jsonify(resources[0])
-        else:
-            return jsonify(resources[1])
+        result = list(filter(lambda resource: resource['r_category'] == r_category, resources))
+        return result
+
 
     def getResourceByName(self, r_name):
-
         resources = self.resource()
-        if (r_name.lower() == 'nikini water'):
-            return jsonify(resources[0])
-        else:
-            return jsonify(resources[1])
-
-
-    def searchResource(self,args):
-        category = args.get("r_category")
-        name = args.get("r_name")
-        resourcesList = []
-
-        if (len(args) == 2) and category and name:
-            resourcesList = self.getResourceByCategoryAndName(category, name)
-        elif (len(args) == 1) and category:
-            resourcesList = self.getResourceByCategory(category)
-        elif (len(args) == 1) and name:
-            resourcesList = self.getResourceByName(name)
-        else:
-            return jsonify(Error="Malformed query string"), 400
-
-        return jsonify(resourcesList)
-
+        result = list(filter(lambda resource: resource['r_name'] == r_name, resources))
+        return result
 
     # def getResourceByCategoryAndName(self,r_category,r_name):
     #

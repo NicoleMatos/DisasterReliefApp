@@ -126,9 +126,9 @@ def getAllRequests():
         return RequestHandler().searchRequests(request.args)
 
 
-@app.route('/requests/<int:r_id>/')
-def getRequestByID(r_id):
-    return RequestHandler().getRequestByID(r_id)
+@app.route('/requests/<int:req_id>/')
+def getRequestByID(req_id):
+    return RequestHandler().getRequestByID(req_id)
 
 
 # =======================================================================================================================
@@ -145,7 +145,7 @@ def getAllResources():
 
 @app.route('/resources/<int:r_id>/')
 def getResourceByID(r_id):
-    return ResourceHandler().getResourceByID(r_id)
+  return ResourceHandler().getResourceByID(r_id)
 
 
 # =======================================================================================================================

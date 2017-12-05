@@ -6,13 +6,15 @@ class CCardHandler:
         result = [
             {
                 'cc_id': 1,
-                'cc_name': 'Orlando Flores',
+                'cc_name': 'Orlando',
+                'cc_lastName': 'Flores',
                 'cc_number': '05/13/2017',
                 'cc_exp_date': '07/22/1992'
             },
             {
                 'cc_id': 2,
-                'cc_name': 'Pedro Rivera',
+                'cc_name': 'Pedro',
+                'cc_lastName': 'Rivera',
                 'cc_number': '02/13/2017',
                 'cc_exp_date': '02/14/2012'
             }
@@ -25,20 +27,30 @@ class CCardHandler:
     def searchCCards(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
+        result = []
         if name and lastname:
-            self.getCCardByNameAndLastName(name, lastname)
+            result = self.getCCardByNameAndLastName(name, lastname)
         elif name:
-            self.getCCardByName(self, name)
+            result = self.getCCardByName(self, name)
         elif lastname:
-            self.getCCardByLastName(self, lastname)
-        return jsonify(self.ccard())
+            result = self.getCCardByLastName(self, lastname)
+        if (len(result)== 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(Result = result)
 
 
     def getCCardByName(self, name, lastname):
-        return jsonify(self.ccard())
+        ccard = self.ccard()
+        result = list(filter(lambda card: card['cc_name'] == name, ccard))
+        return result
 
-    def getCCardByLastName(self, name, lastname):
-        return jsonify(self.ccard())
+    def getCCardByLastName(self,lastname):
+        ccard = self.ccard()
+        result = list(filter(lambda card: card['cc_lastName'] == lastname, ccard))
+        return result
 
     def getCCardByNameAndLastName(self, name, lastname):
-        return jsonify(self.ccard())
+        ccard = self.ccard()
+        result = list(filter(lambda card: card['cc_name'] == name, ccard))
+        result2 = list(filter(lambda card1: card1['cc_lastName'] == lastname, result))
+        return result2

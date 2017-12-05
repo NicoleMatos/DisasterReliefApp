@@ -6,49 +6,104 @@ class UserHandler:
         result = [
             {
                 'u_id': 1,
-                'u_name': 'Pedro',
-                'u_last_name': 'Rivera',
-                'u_email': 'pedro.rivera300@upr.edu',
-                'u_password': '02/13/2017',
-                'u_phone': 7875554422,
-                'u_age': 15,
-                'u_address': 'Vega Baja, PR',
-                'u_location': 'North'
+                'u_email': 'jose.rivera@gmail.com',
+                'u_password': '1234!@',
+                'u_name': 'Jose',
+                'u_lastName':'Rivera',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location' : 'Andalurge',
+                'u_age' : 24
+
             },
+
             {
                 'u_id': 2,
+                'u_email': 'orla.torres@gmail.com',
+                'u_password': '1234!@',
                 'u_name': 'Orlando',
-                'u_last_name': 'Torres',
-                'u_email': 'ordlando.torres350@upr.edu',
-                'u_password': '03/22/2016',
-                'u_phone': 7872345422,
-                'u_age': 20,
-                'u_address': 'San Juan, PR',
-                'u_location': 'Metro'
+                'u_lastName': 'Torres',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location': 'Andalurge',
+                'u_age': 12
+
+            },
+
+            {
+                'u_id': 3,
+                'u_email': 'nico.matos@gmail.com',
+                'u_password': '1234!@',
+                'u_name': 'Nicole',
+                'u_lastName': 'Matos',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location': 'Andalurge',
+                'u_age': 30
+
             }
         ]
         return result
 
-    def getAllUsers(self):
-        return jsonify(Users=self.user())
 
+    # ===================================================================================================================
+    #                                           search Users
+    # ===================================================================================================================
 
     def searchUsers(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
+        location = args.get('location')
+        result = []
         if name and lastname:
-            self.getUserByNameAndLastName(name, lastname)
+            result = self.getUserByNameAndLastName(name, lastname)
         elif name:
-            self.getUserByName(self, name)
+            result = self.getUserByName(self, name)
         elif lastname:
-            self.getUserByLastName(self, lastname)
-        return jsonify(self.users())
+            result = self.getUserByLastName(self, lastname)
+        elif location:
+            result = self.getUserByLocation(location)
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
+        return jsonify(Result = result)
+
+
+    # ===================================================================================================================
+    #                                           get all Users
+    # ===================================================================================================================
+    def getAllUsers(self):
+        return jsonify(Users=self.user())
+
+    # ===================================================================================================================
+    #                                           get users by Name
+    # ===================================================================================================================
 
     def getUserByName(self, name):
-        return jsonify(self.user())
+        users = self.user()
+        result = list(filter(lambda user: user['u_name'] == name, users))
+        return result
+
+    # ===================================================================================================================
+    #                                           get users by Last Name
+    # ===================================================================================================================
 
     def getUserByLastName(self, lastname):
-        return jsonify(self.user())
+        users = self.user()
+        result = list(filter(lambda user: user['u_lastName'] == lastname, users))
+        return result
+
+    # ===================================================================================================================
+    #                                           get users by Name and Last Name
+    # ===================================================================================================================
 
     def getUserByNameAndLastName(self, name, lastname):
-        return jsonify(self.user())
+        users = self.user()
+        result = list(filter(lambda f_name: f_name['u_name'] == name, users))
+        result2 = list(filter(lambda l_name: l_name['u_lastName'] == lastname, result))
+        return result2
+
+    # ===================================================================================================================
+    #                                           get users by Location
+    # ===================================================================================================================
+
+    def getUserByLocation(self,location):
+        users = self.user()
+        result = list(filter(lambda user: user['u_location'] == location, users))
+        return result

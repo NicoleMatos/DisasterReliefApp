@@ -29,7 +29,6 @@ class SupplierHandler:
                 'u_id': 1,
                 'u_email': 'jose.rivera@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Jose',
                 'u_lastName': 'Rivera',
                 'u_address': 'Carr.123 km 0.8',
@@ -42,7 +41,6 @@ class SupplierHandler:
                 'u_id': 2,
                 'u_email': 'orla.torres@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Orlando',
                 'u_lastName': 'Torres',
                 'u_address': 'Carr.123 km 0.8',
@@ -55,7 +53,6 @@ class SupplierHandler:
                 'u_id': 3,
                 'u_email': 'nico.matos@gmail.com',
                 'u_password': '1234!@',
-                'u_phone': '7872134567',
                 'u_name': 'Nicole',
                 'u_lastName': 'Matos',
                 'u_address': 'Carr.123 km 0.8',
@@ -80,6 +77,8 @@ class SupplierHandler:
             result = self.getSupplierByName(name)
         elif lastname:
             result = self.getSupplierByLastName(lastname)
+        if (len(result) == 0):
+            return jsonify(Error="Client Not Found"), 404
         return jsonify(Result=result)
 
     # ===================================================================================================================
