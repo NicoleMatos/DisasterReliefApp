@@ -6,12 +6,14 @@ class RequestHandler:
     def request(self):
         result = [
             {
-                'r_id': 1,
+                'req_id': 1,
+                'c_id': 1,
                 'r_date': '02/10/2017',
                 'r_qty': 4
             },
             {
-                'r_id': 2,
+                'req_id': 2,
+                'c_id': 2,
                 'r_date': '02/15/2017',
                 'r_qty': 2
             }
@@ -50,11 +52,27 @@ class RequestHandler:
         result = list(filter(lambda supplier: supplier['r_id'] == r_id, self.request()))
         return jsonify(result)
 
-    def getRequestsByClientAndDate(self, client, date):
-        return jsonify(self.request())
+    # ===================================================================================================================
+    #                                           get requests by client
+    # ===================================================================================================================
 
     def getRequestsByClient(self, client):
-        return jsonify(self.request())
+        result = list(filter(lambda transaction: transaction['c_id'] == client, self.request()))
+        return result
+
+    # ===================================================================================================================
+    #                                           get requests by date
+    # ===================================================================================================================
 
     def getRequestsByDate(self, date):
-        return jsonify(self.request())
+        result = list(filter(lambda transaction: transaction['req_date'] == date, self.request()))
+        return result
+
+    # ===================================================================================================================
+    #                                     get requests by client and date
+    # ===================================================================================================================
+
+    def getRequestsByClientAndDate(self, client, date):
+        result = list(filter(lambda resource: resource['c_id'] == client, self.request()))
+        result2 = list(filter(lambda resource: resource['req_date'] == date, result))
+        return result2

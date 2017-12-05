@@ -77,7 +77,7 @@ class SupplierHandler:
             result = self.getSupplierByName(name)
         elif lastname:
             result = self.getSupplierByLastName(lastname)
-        if (len(result) == 0):
+        if len(result) == 0:
             return jsonify(Error="Client Not Found"), 404
         return jsonify(Result=result)
 
