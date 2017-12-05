@@ -5,10 +5,52 @@ class AdministratorHandler:
     def administrator(self):
         result = [
             {
-                'a_id': 0
+                'a_id': 0,
+                'u_id': 0
             },
             {
-                'a_id': 1
+                'a_id': 1,
+                'u_id':1
+            }
+        ]
+        return result
+
+    def user(self):
+        result = [
+            {
+                'u_id': 1,
+                'u_email': 'jose.rivera@gmail.com',
+                'u_password': '1234!@',
+                'u_name': 'Jose',
+                'u_lastName':'Rivera',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location' : 'Andalurge',
+                'u_age' : 24
+
+            },
+
+            {
+                'u_id': 2,
+                'u_email': 'orla.torres@gmail.com',
+                'u_password': '1234!@',
+                'u_name': 'Orlando',
+                'u_lastName': 'Torres',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location': 'Andalurge',
+                'u_age': 12
+
+            },
+
+            {
+                'u_id': 3,
+                'u_email': 'nico.matos@gmail.com',
+                'u_password': '1234!@',
+                'u_name': 'Nicole',
+                'u_lastName': 'Matos',
+                'u_address': 'Carr.123 km 0.8',
+                'u_location': 'Andalurge',
+                'u_age': 30
+
             }
         ]
         return result
@@ -28,9 +70,9 @@ class AdministratorHandler:
             result = self.getAdministratorByName(self, name)
         elif lastname:
             result = self.getAdministratorByLastName(self, lastname)
-        if(len(result)== 0):
+        if len(result) == 0:
             return jsonify(Error="Client Not Found"), 404
-        return jsonify(Result = result)
+        return jsonify(Result=result)
 
     # ===================================================================================================================
     #                                           get all suppliers
@@ -58,6 +100,10 @@ class AdministratorHandler:
         result = list(filter(lambda administrator: administrator['u_name'] == lastname, admi))
         return result
 
+    # ===================================================================================================================
+    #                                     get administrator by Name and Last Name
+    # ===================================================================================================================
+
     def getAdministratorByNameAndLastName(self, name, lastname):
         admi = self.searchAdministratosInUsers()
         result = list(filter(lambda f_name: f_name['u_name'] == name, admi))
@@ -74,6 +120,6 @@ class AdministratorHandler:
         result = []
         for i in admiDic:
             for j in usersDic:
-                if (i['u_id'] == j['u_id']):
+                if i['u_id'] == j['u_id']:
                     result.append(j)
         return result

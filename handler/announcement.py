@@ -1,11 +1,13 @@
 from flask import jsonify
 
+
 class AnnouncementHandler:
 
     def announcement(self):
         result = [
             {
                 'a_id': 1,
+                's_id': 1,
                 'a_price': 5.00,
                 'a_date': '02/13/2017',
                 'a_sold_out': 'yes',
@@ -14,6 +16,7 @@ class AnnouncementHandler:
             },
             {
                 'a_id': 2,
+                's_id': 2,
                 'a_price': 10.00,
                 'a_date': '02/20/2017',
                 'a_sold_out': 'no',
@@ -22,8 +25,6 @@ class AnnouncementHandler:
             }
         ]
         return result
-
-
 
     # ===================================================================================================================
     #                                           Search for announcements
@@ -39,36 +40,50 @@ class AnnouncementHandler:
             result = self.getAnnouncementsBySupplier(supplier)
         elif date:
             result = self.getAnnouncementsByDate(date)
-        if (len(result)== 0):
-            return jsonify(Error="Client Not Found"), 404
-        return jsonify(Result = result)
-
+        if len(result) == 0:
+            return jsonify(Error="Announcement Not Found"), 404
+        return jsonify(Result=result)
 
     # ===================================================================================================================
-    #                                           get all announcements
+    #                                          get all announcements
     # ===================================================================================================================
 
     def getAllAnnouncements(self):
         return jsonify(Announcements=self.announcement())
 
     # ===================================================================================================================
-    #                                           get announcements by ID
+    #                                         get announcements by ID
     # ===================================================================================================================
 
-    def getAnnouncementByID(self, id):
+    def getAnnouncementByID(self, a_id):
         ann = self.announcement()
-        result = list(filter(lambda announcement: announcement['a_id'] == id, ann))
+        result = list(filter(lambda announcement: announcement['a_id'] == a_id, ann))
         return jsonify(result)
-    def getAnnouncementsBySupplierAndDate(self, supplier, date):
-        return jsonify(self.request())
 
+    # ===================================================================================================================
+    #                                      get announcements by Supplier
+    # ===================================================================================================================
 
     def getAnnouncementsBySupplier(self, supplier):
-        return jsonify(self.request())
+        ann = self.announcement()
+        result = list(filter(lambda announcement: announcement['s_id'] == supplier, ann))
+        return result
+
+    # ===================================================================================================================
+    #                                         get announcements by Date
+    # ===================================================================================================================
 
     def getAnnouncementsByDate(self, date):
         ann = self.announcement()
         result = list(filter(lambda announcement: announcement['a_date'] == date, ann))
         return result
 
+    # ===================================================================================================================
+    #                                   get announcements by Supplier And Date
+    # ===================================================================================================================
 
+    def getAnnouncementsBySupplierAndDate(self, supplier, date):
+        ann = self.announcement()
+        result = list(filter(lambda resource: resource['s_id'] == supplier, ann))
+        result2 = list(filter(lambda resource: resource['a_date'] == date, result))
+        return result2
