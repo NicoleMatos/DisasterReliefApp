@@ -8,14 +8,14 @@ class RequestHandler:
             {
                 'req_id': 1,
                 'c_id': 1,
-                'r_date': '02/10/2017',
-                'r_qty': 4
+                'req_date': '02/10/2017',
+                'req_qty': 4
             },
             {
                 'req_id': 2,
                 'c_id': 2,
-                'r_date': '02/15/2017',
-                'r_qty': 2
+                'req_date': '02/15/2017',
+                'req_qty': 2
             }
         ]
         return result

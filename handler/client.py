@@ -132,21 +132,21 @@ class ClientHandler:
         requests = [
 
             {
-                'r_id': 0,
-                'r_qty': 12,
-                'r_date' : 1/12/17
+                'req_id': 0,
+                'req_qty': 12,
+                'req_date' : 1/12/17
             },
 
             {
-                'r_id': 1,
-                'r_qty': 12,
-                'r_date' : 1/12/17
+                'req_id': 1,
+                'req_qty': 12,
+                'req_date' : 1/12/17
             },
 
             {
-                'r_id': 2,
-                'r_qty': 12,
-                'r_date' : 1/12/17
+                'req_id': 2,
+                'req_qty': 12,
+                'req_date' : 1/12/17
             }
 
         ]
