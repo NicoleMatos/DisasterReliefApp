@@ -60,7 +60,7 @@ class UserHandler:
             result = self.getUserByLastName(self, lastname)
         elif location:
             result = self.getUserByLocation(location)
-        if (len(result) == 0):
+        if len(result) == 0:
             return jsonify(Error="User Not Found"), 404
         return jsonify(Result = result)
 
@@ -114,7 +114,7 @@ class UserHandler:
     #                                           get users by Location
     # ===================================================================================================================
 
-    def getUserByLocation(self,location):
+    def getUserByLocation(self, location):
         users = self.user()
         result = list(filter(lambda user: user['u_location'] == location, users))
         return result

@@ -1,5 +1,6 @@
 from flask import jsonify
 
+
 class CCardHandler:
 
     def ccard(self):
@@ -35,7 +36,7 @@ class CCardHandler:
             result = self.getCCardByName(self, name)
         elif lastname:
             result = self.getCCardByLastName(self, lastname)
-        if len(result)== 0:
+        if len(result) == 0:
             return jsonify(Error="Credit Card Not Found"), 404
         return jsonify(Result=result)
 
@@ -50,8 +51,7 @@ class CCardHandler:
     #                                           get credit cards by id
     # ===================================================================================================================
 
-
-    def getCCardByID(self,cc_id):
+    def getCCardByID(self, cc_id):
         ccards = self.ccard()
         result = list(filter(lambda card: card['cc_id'] == cc_id, ccards))
         if len(result) > 0:
