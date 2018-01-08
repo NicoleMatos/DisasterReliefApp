@@ -43,10 +43,17 @@ def getSupplierByID(s_id):
 def getAnnouncementsBySupplierID(s_id):
     return SupplierHandler().getAnnouncementsBySupplierID(s_id)
 
+@app.route('/suppliers/<int:s_id>/resources/')
+def getResourcesBySupplierID(s_id):
+    return SupplierHandler().getResourcesBySupplierID(s_id)
 
 @app.route('/suppliers/<int:s_id>/transactions/')
 def getTransactionsBySupplierID(s_id):
     return SupplierHandler().getTransactionsBySupplierID(s_id)
+
+@app.route('/suppliers/<region>/resources')
+def getResourcesByRegion(region):
+    return SupplierHandler().getResourcesByRegion(region)
 
 
 # =======================================================================================================================

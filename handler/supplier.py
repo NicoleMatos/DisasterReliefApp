@@ -1,156 +1,133 @@
 from flask import jsonify
+from dao.supplier import SupplierDAO
 
 
 class SupplierHandler:
 
-    def suppliers(self):
-        result = [
-            {
-                's_id': 0,
-                'u_id': 0,
-                'bank_account': 123456788
-            },
-            {
-                's_id': 1,
-                'u_id': 1,
-                'bank_account': 123456789
-            },
-            {
-                's_id': 2,
-                'u_id': 2,
-                'bank_account': 987654321
-            }
-        ]
+    def build_supplier_dict(self, row):
+        result = {}
+        result['s_id'] = row[0]
+        result['bank_account'] = row[1]
         return result
 
-    def users(self):
-        users = [
-            {
-                'u_id': 1,
-                'u_email': 'jose.rivera@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Jose',
-                'u_lastName': 'Rivera',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 24
+    def build_announcement_dict(self, row):
+        result = {}
+        result['a_id'] = row[0]
+        result['a_price'] = row[1]
+        result['a_date'] = row[2]
+        result['a_sold_out'] = row[3]
+        result['a_initial_qty'] = row[4]
+        result['a_curr_qty'] = row[5]
+        return result
 
-            },
+    def build_resource_dict(self, row):
+        result = {}
+        result['r_id'] = row[0]
+        result['r_category'] = row[1]
+        result['r_name'] = row[2]
+        result['r_description'] = row[3]
+        return result
 
-            {
-                'u_id': 2,
-                'u_email': 'orla.torres@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Orlando',
-                'u_lastName': 'Torres',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 12
-
-            },
-
-            {
-                'u_id': 3,
-                'u_email': 'nico.matos@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Nicole',
-                'u_lastName': 'Matos',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 30
-
-            }
-        ]
-        return users
+    def build_transaction_dict(self, row):
+        result = {}
+        result['t_id'] = row[0]
+        result['t_price'] = row[1]
+        result['t_date'] = row[2]
+        result['t_qty'] = row[3]
+        return result
 
     # ===================================================================================================================
-    #                                          search for suppliers
-    # ===================================================================================================================
-
-    def searchSuppliers(self, args):
-        name = args.get('name')
-        lastname = args.get('lastname')
-        result = []
-        if name and lastname:
-            result = self.getSupplierByNameAndLastName(name, lastname)
-        elif name:
-            result = self.getSupplierByName(name)
-        elif lastname:
-            result = self.getSupplierByLastName(lastname)
-        if len(result) == 0:
-            return jsonify(Error="Supplier Not Found"), 404
-        return jsonify(Result=result)
-
-    # ===================================================================================================================
-    #                                           get all suppliers
+    #                                                get all suppliers
     # ===================================================================================================================
 
     def getAllSuppliers(self):
-        return jsonify(Suppliers=self.searchSuppliersInUsers())
+        dao = SupplierDAO()
+        suppliers_list = dao.getAllSuppliers()
+        result_list = []
+        for row in suppliers_list:
+            result = self.build_supplier_dict(row)
+            result_list.append(result)
+        return jsonify(Suppliers=result_list)
 
     # ===================================================================================================================
-    #                                           get things by id
+    #                                        search for suppliers by region
     # ===================================================================================================================
 
-    def getSupplierByID(self, u_id):
-        suppliers = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
-        if len(result) == 0:
+    def searchSuppliers(self, args):
+        if len(args) > 1:
+            return jsonify(Error='Malformed search string.'), 400
+        else:
+            region = args.get('region')
+            if region:
+                dao = SupplierDAO()
+                supplier_list = dao.getSuppliersByRegion(region)
+                result_list = []
+                for row in supplier_list:
+                    result = self.build_supplier_dict(row)
+                    result_list.append(result)
+                return jsonify(Suppliers=result_list)
+            else:
+                return jsonify(Error='Malformed search string.'), 400
+
+
+    # ===================================================================================================================
+    #                                           get things by supplier id
+    # ===================================================================================================================
+
+    def getSupplierByID(self, s_id):
+        dao = SupplierDAO()
+        row = dao.getSupplierById(s_id)
+        if not row:
             return jsonify(Error="Supplier Not Found"), 404
-        return jsonify(result)
+        else:
+            result = self.build_supplier_dict(row)
+        return jsonify(Supplier=result)
 
-    def getAnnouncementsBySupplierID(self, u_id):
-        suppliers = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
-        if len(result) == 0:
-            return jsonify(Error="Announcement Not Found"), 404
-        return jsonify(result)
+    def getAnnouncementsBySupplierId(self, s_id):
+        dao = SupplierDAO()
+        if not dao.getSupplierById(s_id):
+            return jsonify(Error="Supplier Not Found"), 404
+        announcements_list = dao.getAnnouncementsBySupplierId(s_id)
+        result_list = []
+        for row in announcements_list:
+            result = self.build_announcement_dict(row)
+            result_list.append(result)
+        return jsonify(Announcements=result_list)
 
-    def getTransactionsBySupplierID(self, u_id):
-        suppliers = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_id'] == u_id, suppliers))
-        if len(result) == 0:
-            return jsonify(Error="Transaction Not Found"), 404
-        return jsonify(result)
+    def getResourcesBySupplierId(self, s_id):
+        dao = SupplierDAO()
+        if not dao.getSupplierById(s_id):
+            return jsonify(Error="Supplier Not Found"), 404
+        resources_list = dao.getResourcesBySupplierId(s_id)
+        result_list = []
+        for row in resources_list:
+            result = self.build_resource_dict(row)
+            result_list.append(result)
+        return jsonify(Resources=result_list)
 
-    # ===================================================================================================================
-    #                                           get suppliers by Name
-    # ===================================================================================================================
-
-    def getSupplierByName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_name'] == name, users))
-        return result
-
-    # ===================================================================================================================
-    #                                           get suppliers by Last Name
-    # ===================================================================================================================
-
-    def getSupplierByLastName(self, name):
-        users = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_lastName'] == name, users))
-        return result
-
-    # ===================================================================================================================
-    #                                           get suppliers by Name And Last Name
-    # ===================================================================================================================
-
-    def getSupplierByNameAndLastName(self, name, last_name):
-        suppliers = self.searchSuppliersInUsers()
-        result = list(filter(lambda supplier: supplier['u_name'] == name, suppliers))
-        result2 = list(filter(lambda supplier: supplier['u_lastName'] == last_name, result))
-        return result2
+    def getTransactionsBySupplierId(self, s_id):
+        dao = SupplierDAO()
+        if not dao.getSupplierById(s_id):
+            return jsonify(Error="Supplier Not Found"), 404
+        transactions_list = dao.getTransactionsBySupplierId(s_id)
+        result_list = []
+        for row in transactions_list:
+            result = self.build_transaction_dict(row)
+            result_list.append(result)
+        return jsonify(Transactions=result_list)
 
     # ===================================================================================================================
-    #                                           method to hard-wire information
+    #                                    get resources by supplier region
     # ===================================================================================================================
 
-    def searchSuppliersInUsers(self):
-        suppliersDic = self.suppliers()
-        usersDic = self.users()
-        result = []
-        for i in suppliersDic:
-            for j in usersDic:
-                if i['u_id'] == j['u_id']:
-                    result.append(j)
-        return result
+    def getResourcesByRegion(self, region):
+        dao = SupplierDAO()
+        if not dao.getResourcesByRegion(region):
+            return jsonify(Error='Resource Not Found.'), 404
+        else:
+            resource_list = dao.getResourcesByRegion(region)
+            result_list = []
+            for row in resource_list:
+                result = self.build_resource_dict(row)
+                result_list.append(result)
+            return jsonify(Resources=result_list)
