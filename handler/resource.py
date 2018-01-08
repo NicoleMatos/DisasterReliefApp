@@ -1,85 +1,60 @@
 from flask import jsonify
-
+from dao.resource import ResourceDAO
 
 class ResourceHandler:
 
-    def resource(self):
-        result = [
-            {
-                'r_id': 1,
-                'r_category': 'water',
-                'r_name': 'nikini',
-                'r_description': "24 bottles"
-            },
-            {
-                'r_id': 2,
-                'r_category': 'clothing',
-                'r_name': 't-shirt',
-                'r_description': "medium"
-            }
-        ]
+    def build_resource_dict(self, row):
+        result = {}
+        result['r_id'] = row[0]
+        result['r_category'] = row[1]
+        result['r_name'] = row[2]
+        result['r_description'] = row[3]
         return result
 
     # ===================================================================================================================
-    #                                          search for resources
+    #                                        search for resources
     # ===================================================================================================================
 
     def searchResources(self, args):
         category = args.get('category')
         name = args.get('name')
-        result = []
-        if category and name:
-            result = self.getResourceByCategoryAndName(category, name)
-        elif category:
-            result = self.getResourceByCategory(category)
-        elif name:
-            result = self.getResourceByName(name)
-        if len(result) == 0:
-            return jsonify(Error="Resource Not Found"), 404
-        return jsonify(Result=result)
+        dao = ResourceDAO()
+        if (len(args) == 2) and category and name:
+            resource_list = dao.getResourcesByCategoryAndName(category, name)
+        elif (len(args) == 1) and category:
+            resource_list = dao.getResourcesByCategory(category)
+        elif (len(args) == 1) and name:
+            resource_list = dao.getResourcesByName(name)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in resource_list:
+            result = self.build_resource_dict(row)
+            result_list.append(result)
+        return jsonify(Resource=result_list)
 
     # ===================================================================================================================
     #                                           get all resources
     # ===================================================================================================================
 
     def getAllResources(self):
-        return jsonify(Resources=self.resource())
+        dao = ResourceDAO()
+        resources_list = dao.getAllResources()
+        result_list = []
+        for row in resources_list:
+            result = self.build_resource_dict(row)
+            result_list.append(result)
+        return jsonify(Resources=result_list)
 
     # ===================================================================================================================
-    #                                           get things by id
+    #                                           get things by resource id
     # ===================================================================================================================
 
     def getResourceByID(self, r_id):
-        resources = self.resource()
-        result = list(filter(lambda resource: resource['r_id'] == r_id, resources))
-        if len(result) > 0:
-            return jsonify(Result=result)
-        return jsonify(Error="Resource Not Found"), 404
-
-    # ===================================================================================================================
-    #                                         get resources by Category
-    # ===================================================================================================================
-
-    def getResourceByCategory(self, r_category):
-        resources = self.resource()
-        result = list(filter(lambda resource: resource['r_category'] == r_category, resources))
-        return result
-
-    # ===================================================================================================================
-    #                                           get resources by Name
-    # ===================================================================================================================
-
-    def getResourceByName(self, r_name):
-        resources = self.resource()
-        result = list(filter(lambda resource: resource['r_name'] == r_name, resources))
-        return result
-
-    # ===================================================================================================================
-    #                                   get resources by Region
-    # ===================================================================================================================
-
-    def getResourceByRegion(self, u_region):
-        resources = self.resource()
-        result = list(filter(lambda resource: resource['r_category'] == r_category, resources))
-        result2 = list(filter(lambda resource: resource['r_name'] == r_name, result))
-        return result2
+        dao = ResourceDAO()
+        row = dao.getResourceById(r_id)
+        if not row:
+            return jsonify(Error="Resource Not Found"), 404
+        else:
+            result = self.build_resource_dict(row)
+        return jsonify(Resource=result)
