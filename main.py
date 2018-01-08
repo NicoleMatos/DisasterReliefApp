@@ -33,7 +33,6 @@ def getAllSuppliers():
     else:
         return SupplierHandler().searchSuppliers(request.args)
 
-
 @app.route('/suppliers/<int:s_id>/')
 def getSupplierByID(s_id):
     return SupplierHandler().getSupplierByID(s_id)
