@@ -46,14 +46,14 @@
     cc_exp_date Date            -- credit card expiration date
     );
 
-    create table _resource(                -- resource of system
+    create table resource(                -- resource of system
     r_id serial primary key,         -- resource id
     r_category varchar(20),         -- resource category
     r_name varchar(20),             -- resource name
     r_description varchar(50)        -- resource description
     );
 
-    create table _transaction(                -- transaction made between supplier and client
+    create table transaction(                -- transaction made between supplier and client
     t_id serial primary key,         -- transaction id
     s_id integer references supplier(s_id),     -- supplier id
     c_id integer references client(c_id),         -- client id
