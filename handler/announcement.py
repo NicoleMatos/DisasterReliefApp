@@ -62,14 +62,7 @@ class AnnouncementHandler:
             return jsonify(Result=result)
         return jsonify(Error="Announcement Not Found"), 404
 
-    # ===================================================================================================================
-    #                                      get announcements by Supplier
-    # ===================================================================================================================
 
-    def getAnnouncementsBySupplier(self, supplier):
-        ann = self.announcement()
-        result = list(filter(lambda announcement: announcement['s_id'] == supplier, ann))
-        return result
 
     # ===================================================================================================================
     #                                         get announcements by Date
