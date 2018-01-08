@@ -1,202 +1,87 @@
 from flask import jsonify
-from handler.supplier import SupplierHandler
+from dao.client import ClientDAO
 
 
-# Class that handles the Consumer
+# Class that handles the Client
 class ClientHandler:
 
-    def clientsDictionary(self):
-        clients = [
+    def build_client_dict(self,row):
+        result = {}
+        result['c_id'] = row[0]
+        result['u_id'] = row[1]
+        return result
 
-            {
-                'c_id': 0,
-                'u_id': 2
+    def build_user_dict(self, row):
+        result = {}
+        result['u_id'] = row[0]
+        result['u_email'] = row[1]
+        result['u_password'] = row[2]
+        result['u_name'] = row[3]
+        result['u_lastname'] = row[4]
+        result['u_region'] = row[5]
+        result['u_age'] = row[6]
+        return result
 
-            },
+    def build_transaction_dict(self, row):
+        result = {}
+        result['t_id'] = row[0]
+        result['s_id'] = row[1]
+        result['c_id'] = row[2]
+        result['r_id'] = row[3]
+        result['t_price'] = row[4]
+        result['t_date'] = row[5]
+        result['t_qty'] = row[6]
+        return result
 
-            {
-                'c_id': 1,
-                'u_id': 3
+    def build_request_dict(self, row):
+        result = {}
+        result['req_id'] = row[0]
+        result['c_id'] = row[1]
+        result['r_id'] = row[2]
+        result['req_qty'] = row[3]
+        result['req_date'] = row[4]
+        return result
 
-            },
+    def build_credit_Card_dict(self, row):
+        result = {}
+        result['cc_id'] = row[0]
+        result['c_id'] = row[1]
+        result['cc_name'] = row[2]
+        result['cc_lastname'] = row[3]
+        result['cc_number'] = row[4]
+        result['cc_exp_date'] = row[5]
+        return result
 
-            {
-                'c_id': 2,
-                'u_id': 3
-
-            }
-
-        ]
-        return clients
-
-
-    def usersDictionary(self):
-        users = [
-            {
-                'u_id': 1,
-                'u_email': 'jose.rivera@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Jose',
-                'u_lastName':'Rivera',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location' : 'Andalurge',
-                'u_age' : 24
-
-            },
-
-            {
-                'u_id': 2,
-                'u_email': 'orla.torres@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Orlando',
-                'u_lastName': 'Torres',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 12
-
-            },
-
-            {
-                'u_id': 3,
-                'u_email': 'nico.matos@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Nicole',
-                'u_lastName': 'Matos',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 30
-
-            }
-        ]
-        return users
-
-    def suppliersDictionary(self):
-        suppliers = [
-
-            {
-                's_id': 0,
-                'u_id': 0,
-                'bank_account': 123456788
-            },
-            {
-                's_id': 1,
-                'u_id': 1,
-                'bank_account': 123456789
-            },
-            {
-                's_id': 2,
-                'u_id': 2,
-                'bank_account': 987654321
-            }
-
-        ]
-        return suppliers
-
-    def transactionsDictionary(self):
-        transactions = [
-
-            {
-                't_id': 0,
-                't_price' : 1.00,
-                't_date' : '1/enero/17',
-                't_qty' : 1
-            },
-
-            {
-                't_id': 1,
-                't_price': 2.00,
-                't_date': '4/enero/17',
-                't_qty': 2
-            },
-
-            {
-                't_id': 2,
-                't_price': 50.00,
-                't_date': '1/febrero/17',
-                't_qty': 4
-            },
-
-            {
-                't_id': 3,
-                't_price': 100.00,
-                't_date': '1/enero/18',
-                't_qty': 15
-            },
-
-
-        ]
-        return transactions
-
-
-    def requestsDictionary(self):
-        requests = [
-
-            {
-                'req_id': 0,
-                'req_qty': 12,
-                'req_date' : 1/12/17
-            },
-
-            {
-                'req_id': 1,
-                'req_qty': 12,
-                'req_date' : 1/12/17
-            },
-
-            {
-                'req_id': 2,
-                'req_qty': 12,
-                'req_date' : 1/12/17
-            }
-
-        ]
-        return requests
-
-
-    def creditCardsDictionary(self):
-        cCards = [
-
-            {
-                'cc_id': 0,
-                'cc_name': 'Nicole Matos',
-                'cc_number': 12345678,
-                'cc_exp_date' : 1/12/17
-            },
-
-            {
-                'cc_id': 1,
-                'cc_name': 'Gilissa Matos',
-                'cc_number': 45678001,
-                'cc_exp_date' : 1/12/17
-            },
-
-            {
-                'cc_id': 2,
-                'cc_name': 'Orlando Perez',
-                'cc_number': 23456788,
-                'cc_exp_date' : 1/12/18
-            }
-
-        ]
-        return cCards
+    def build_supplier_dict(self, row):
+        result = {}
+        result['s_id'] = row[0]
+        result['u_id'] = row[1]
+        result['bank_account'] = row[2]
+        return result
 
     # ===================================================================================================================
     #                                          search for clients
     # ===================================================================================================================
 
     def searchClients(self, args):
-        name = args.get('name')
-        lastname = args.get('lastname')
-        result = []
-        if name and lastname:
-            result = self.getClientByNameAndLastName(name, lastname)
-        elif name:
-            result = self.getClientByName(name)
-        elif lastname:
-           result = self.getClientByLastName(lastname)
-        if len(result) == 0:
-            return jsonify(Error="Client Not Found"), 404
-        return jsonify(Result=result)
+        name = args.get("name")
+        lastname = args.get("lastname")
+        dao = ClientDAO()
+        clients_list = []
+        if (len(args) == 2) and name and lastname:
+            clients_list = dao.getClientByNameAndLastName(name,lastname)
+        elif (len(args) == 1) and name:
+            clients_list = dao.getClientByName(name)
+        elif (len(args) == 1) and lastname:
+            clients_list = dao.getClientByLastName(lastname)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in clients_list:
+            result = self.build_client_dict(row)
+            result_list.append(result)
+
+        return jsonify(Client=result_list)
 
 
     #===================================================================================================================
@@ -204,87 +89,115 @@ class ClientHandler:
     #===================================================================================================================
 
     def getAllClients(self):
-        return jsonify(Clients = self.searchClientsInUsers())
+        dao = ClientDAO()
+        clients_list = dao.getAllClients()
+        result_list = []
+        for row in clients_list:
+            result = self.build_client_dict(row)
+            result_list.append(result)
+        return jsonify(Clients=result_list)
 
     # ===================================================================================================================
     #                                           get things by id
     # ===================================================================================================================
 
-    def getTransactionsByClientID(self,u_id):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if len(result)== 0:
-            return jsonify(Error="Transaction Not Found"), 404
-        return jsonify(result)
-
-    def getRequestsByClientID(self,u_id):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if len(result) == 0:
-            return jsonify(Error="Request Not Found"), 404
-        return jsonify(result)
-
-    def getCreditCardsByClientID(self,u_id):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if len(result) == 0:
-            return jsonify(Error="Credit Card Not Found"), 404
-        return jsonify(result)
-
-    def getSuppliersByClientID(self,u_id):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if len(result) == 0:
-            return jsonify(Error="Supplier Not Found"), 404
-        return jsonify(result)
-
-
-    def getClientByID(self, u_id):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_id'] == u_id, clients))
-        if len(result) == 0:
+    def getTransactionsByClientID(self,c_id):
+        dao = ClientDAO()
+        if not dao.getClientById(c_id):
             return jsonify(Error="Client Not Found"), 404
-        return jsonify(result)
+        transactions_list = dao.getTransactionsByClientID(c_id)
+        result_list = []
+        for row in transactions_list:
+            result = self.build_transaction_dict(row)
+            result_list.append(result)
+
+        return jsonify(Transactions=result_list)
+
+    def getRequestsByClientID(self,c_id):
+        dao = ClientDAO()
+        if not dao.getClientById(c_id):
+            return jsonify(Error="Client Not Found"), 404
+        requests_list = dao.getRequestsByClientID(c_id)
+        result_list = []
+        for row in requests_list:
+            result = self.build_request_dict(row)
+            result_list.append(result)
+        return jsonify(Requests=result_list)
+
+    def getCreditCardsByClientID(self,c_id):
+        dao = ClientDAO()
+        if not dao.getClientById(c_id):
+            return jsonify(Error="Client Not Found"), 404
+        cards_list = dao.getCreditCardsByClientID(c_id)
+        result_list = []
+        for row in cards_list:
+            result = self.build_credit_Card_dict(row)
+            result_list.append(result)
+        return jsonify(Cards=result_list)
+
+
+    def getSuppliersByClientID(self,c_id):
+        dao = ClientDAO()
+        if not dao.getClientById(c_id):
+            return jsonify(Error="Client Not Found"), 404
+        suppliers_list = dao.getSuppliersByClientID(c_id)
+        result_list = []
+        for row in suppliers_list:
+            result = self.build_supplier_dict(row)
+            result_list.append(result)
+        return jsonify(Suppliers=result_list)
+
+    def getClientByID(self, c_id):
+        dao = ClientDAO()
+        row = dao.getClientById(c_id)
+        if not row:
+            return jsonify(Error="Client Not Found"), 404
+        else:
+            client = self.build_client_dict(row)
+
+        return jsonify(Client=client)
 
 
     # ===================================================================================================================
     #                                           get clients by Name
     # ===================================================================================================================
 
-    def getClientByName(self, c_name):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_name'] == c_name, clients))
-        return result
+    def getClientByName(self, u_name):
+        dao = ClientDAO()
+        row = dao.getClientByName(u_name)
+        if not row:
+            return jsonify(Error="Client Not Found"), 404
+        else:
+            client = self.build_client_dict(row)
+
+        return jsonify(Client=client)
+
 
     # ===================================================================================================================
     #                                           get client by Last Name
     # ===================================================================================================================
 
-    def getClientByLastName(self, c_lastname):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_lastName'] == c_lastname, clients))
-        return result
+    def getClientByLastName(self, u_lastname):
+        dao = ClientDAO()
+        row = dao.getClientByName(u_lastname)
+        if not row:
+            return jsonify(Error="Client Not Found"), 404
+        else:
+            client = self.build_client_dict(row)
+
+        return jsonify(Client=client)
 
     # ===================================================================================================================
     #                                           get client by Name And Last Name
     # ===================================================================================================================
 
-    def getClientByNameAndLastName(self, name, last_name):
-        clients = self.searchClientsInUsers()
-        result = list(filter(lambda client: client['u_name'] == name, clients))
-        result2 = list(filter(lambda client: client['u_lastName'] == last_name, result))
-        return result2
+    def getClientByNameAndLastName(self, u_name, u_last_name):
+        dao = ClientDAO()
+        row = dao.getClientByNameAndLastName(u_name,u_last_name)
+        if not row:
+            return jsonify(Error="Client Not Found"), 404
+        else:
+            client = self.build_client_dict(row)
 
-    # ===================================================================================================================
-    #                                           method to hard-wire information
-    # ===================================================================================================================
+        return jsonify(Client=client)
 
-    def searchClientsInUsers(self):
-        clientsDic = self.clientsDictionary()
-        usersDic = self.usersDictionary()
-        result = []
-        for i in clientsDic:
-            for j in usersDic:
-                if i['u_id'] == j['u_id']:
-                    result.append(j)
-        return result

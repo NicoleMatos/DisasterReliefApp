@@ -2,71 +2,128 @@ from config.dbconfig import pg_config
 import psycopg2
 
 
-class UserDAO:
+class ClientDAO:
     def __init__(self):
 
-        return 0;
+        connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'],
+                                                            pg_config['user'],
+                                                            pg_config['passwd'])
 
+        self.conn = psycopg2._connect(connection_url)
 
-    def getAllUsers(self):
+    #===================================================================================================================
+    #                                          Get all Clients
+    #===================================================================================================================
+
+    def getAllClients(self):
         cursor = self.conn.cursor()
-        query = "select * from user;"
+        query = "select * from user_table where u_id IN (select u_id from client);"
         cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def getUserById(self,u_id):
+    # ===================================================================================================================
+    #                                           get things by id
+    # ===================================================================================================================
+
+
+    def getClientById(self,c_id):
         cursor = self.conn.cursor()
-        query = "select * from user where u_id = %s;"
-        cursor.execute(query,(u_id,))
+        query = "select * from user_table natural inner join client where c_id = %s;"
+        cursor.execute(query,(c_id,))
         result = cursor.fetchone()
         return result
 
-
-    def getUserByName(self,u_name):
+    def getTransactionsByClientID(self, c_id):
         cursor = self.conn.cursor()
-        query = "select * from user where u_name = %s;"
+        query = "select * from _transaction where c_id = %s;"
+        cursor.execute(query,(c_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getRequestsByClientID(self, c_id):
+        cursor = self.conn.cursor()
+        query = "select * from request where c_id = %s;"
+        cursor.execute(query, (c_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getCreditCardsByClientID(self, c_id):
+        cursor = self.conn.cursor()
+        query = "select * from credit_card where c_id = %s;"
+        cursor.execute(query, (c_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByClientID(self, c_id):
+        cursor = self.conn.cursor()
+        query = "select * from user_table where u_id IN (select u_id from _transaction natural inner join supplier where c_id = %s);"
+        cursor.execute(query, (c_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
+    #                                           get clients by Name
+    # ===================================================================================================================
+
+    def getClientByName(self,u_name):
+        cursor = self.conn.cursor()
+        query = "select * from user_table natural inner join client where u_name = %s;"
         cursor.execute(query,(u_name,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
+    # ===================================================================================================================
+    #                                           get clients by Lastname
+    # ===================================================================================================================
 
-    def getUserByLastName(self,u_lastName):
+    def getClientByLastName(self,u_lastname):
         cursor = self.conn.cursor()
-        query = "select * from user where u_lastName = %s;"
-        cursor.execute(query,(u_lastName,))
+        query = "select * from user_table natural inner join client where u_lastname = %s;"
+        cursor.execute(query, (u_lastname,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def getUserByNameAndLastName(self,u_name,u_lastName):
+    # ===================================================================================================================
+    #                                           get clients by Name and Lastname
+    # ===================================================================================================================
+
+
+    def getClientByNameAndLastName(self,u_name,u_lastname):
         cursor = self.conn.cursor()
-        query = "select * from user where u_name = %s and u_lastName = %s;"
-        cursor.execute(query,(u_name,u_lastName))
+        query = "select * from user_table natural inner join client where u_name = %s and u_lastname = %s;"
+        cursor.execute(query,(u_name,u_lastname))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def getUserByLocation(self,u_location):
+
+    # ===================================================================================================================
+    #                                           get clients by region
+    # ===================================================================================================================
+
+    def getClientByRegion(self,u_region):
         cursor = self.conn.cursor()
-        query = "select * from user where u_location = %s;"
-        cursor.execute(query,(u_location,))
+        query = "select * from user_table natural inner join client where u_region = %s;"
+        cursor.execute(query,(u_region,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    def insert(self, u_name, u_lastName, u_age, u_address, u_location, u_email, u_password):
-        cursor = self.conn.cursor()
-        query = "insert into user(u_name, u_lastName, u_age, u_address, u_location, u_email, u_password) values (%s,%s,%d,%s,%s,%s,%s) returning u_id;"
-        cursor.execute(query,(u_name, u_lastName, u_age, u_address, u_location, u_email, u_password))
-        u_id = cursor.fetchone()[0]
-        self.conn.commit()
-        return u_id
 
