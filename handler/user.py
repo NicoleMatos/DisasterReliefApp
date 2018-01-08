@@ -1,120 +1,123 @@
 from flask import jsonify
+from dao.user import UserDAO
 
 class UserHandler:
 
-    def user(self):
-        result = [
-            {
-                'u_id': 1,
-                'u_email': 'jose.rivera@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Jose',
-                'u_lastName':'Rivera',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location' : 'Andalurge',
-                'u_age' : 24
 
-            },
 
-            {
-                'u_id': 2,
-                'u_email': 'orla.torres@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Orlando',
-                'u_lastName': 'Torres',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 12
-
-            },
-
-            {
-                'u_id': 3,
-                'u_email': 'nico.matos@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Nicole',
-                'u_lastName': 'Matos',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 30
-
-            }
-        ]
+    def build_user_dict(self, row):
+        result = {}
+        result['u_id'] = row[0]
+        result['u_email'] = row[1]
+        result['u_password'] = row[2]
+        result['u_name'] = row[3]
+        result['u_lastname'] = row[4]
+        result['u_region'] = row[5]
+        result['u_age'] = row[6]
         return result
-
 
     # ===================================================================================================================
     #                                           search Users
     # ===================================================================================================================
 
     def searchUsers(self, args):
-        name = args.get('name')
-        lastname = args.get('lastname')
-        location = args.get('location')
-        result = []
-        if name and lastname:
-            result = self.getUserByNameAndLastName(name, lastname)
-        elif name:
-            result = self.getUserByName(self, name)
-        elif lastname:
-            result = self.getUserByLastName(self, lastname)
-        elif location:
-            result = self.getUserByLocation(location)
-        if len(result) == 0:
-            return jsonify(Error="User Not Found"), 404
-        return jsonify(Result = result)
+        name = args.get("name")
+        lastname = args.get("lastname")
+        dao = UserDAO()
+        user_list = []
+        if (len(args) == 2) and name and lastname:
+            user_list = dao.getUserByNameAndLastName(name,lastname)
+        elif (len(args) == 1) and name:
+            user_list = dao.getUserByName(name)
+        elif (len(args) == 1) and lastname:
+            user_list = dao.getUserByLastName(lastname)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in user_list:
+            result = self.build_user_dict(row)
+            result_list.append(result)
+        return jsonify(User=result_list)
 
 
     # ===================================================================================================================
     #                                           get all Users
     # ===================================================================================================================
     def getAllUsers(self):
-        return jsonify(Users=self.user())
+        dao = UserDAO()
+        user_list = dao.getAllUsers()
+        result_list = []
+        for row in user_list:
+            result = self.build_user_dict(row)
+            result_list.append(result)
+        return jsonify(Users=result_list)
 
     # ===================================================================================================================
     #                                           get Users by ID
     # ===================================================================================================================
 
-    def getCCardByID(self, u_id):
-        users = self.user()
-        result = list(filter(lambda user: user['u_id'] == u_id, users))
-        if len(result) > 0:
-            return jsonify(Result=result)
-        return jsonify(Error="User Not Found"), 404
+    def getUserByID(self, u_id):
+        dao = UserDAO()
+        row = dao.getUserById(u_id)
+        if not row:
+            return jsonify(Error="User Not Found"), 404
+        else:
+            user = self.build_user_dict(row)
+
+        return jsonify(User=user)
 
     # ===================================================================================================================
     #                                           get users by Name
     # ===================================================================================================================
 
     def getUserByName(self, name):
-        users = self.user()
-        result = list(filter(lambda user: user['u_name'] == name, users))
-        return result
+        dao = UserDAO()
+        row = dao.getUserByName(name)
+        if not row:
+            return jsonify(Error="User Not Found"), 404
+        else:
+            user = self.build_user_dict(row)
+
+        return jsonify(User=user)
 
     # ===================================================================================================================
     #                                           get users by Last Name
     # ===================================================================================================================
 
     def getUserByLastName(self, lastname):
-        users = self.user()
-        result = list(filter(lambda user: user['u_lastName'] == lastname, users))
-        return result
+        dao = UserDAO()
+        row = dao.getUserByLastName(lastname)
+        if not row:
+            return jsonify(Error="User Not Found"), 404
+        else:
+            user = self.build_user_dict(row)
+
+        return jsonify(User=user)
 
     # ===================================================================================================================
     #                                           get users by Name and Last Name
     # ===================================================================================================================
 
     def getUserByNameAndLastName(self, name, lastname):
-        users = self.user()
-        result = list(filter(lambda user: user['u_name'] == name, users))
-        result2 = list(filter(lambda user: user['u_lastName'] == lastname, result))
-        return result2
+        dao = UserDAO()
+        row = dao.getUserByNameAndLastName(name,lastname)
+        if not row:
+            return jsonify(Error="User Not Found"), 404
+        else:
+            user = self.build_user_dict(row)
+
+        return jsonify(User=user)
 
     # ===================================================================================================================
     #                                           get users by Location
     # ===================================================================================================================
 
-    def getUserByLocation(self, location):
-        users = self.user()
-        result = list(filter(lambda user: user['u_location'] == location, users))
-        return result
+    def getUserByRegion(self, u_region):
+        dao = UserDAO()
+        row = dao.getUserByRegion(u_region)
+        if not row:
+            return jsonify(Error="User Not Found"), 404
+        else:
+            user = self.build_user_dict(row)
+
+        return jsonify(User=user)
