@@ -75,10 +75,10 @@ class ResourceHandler:
         return result
 
     # ===================================================================================================================
-    #                                   get resources by Category And Name
+    #                                   get resources by Region
     # ===================================================================================================================
 
-    def getResourceByCategoryAndName(self, r_category, r_name):
+    def getResourceByRegion(self, u_region):
         resources = self.resource()
         result = list(filter(lambda resource: resource['r_category'] == r_category, resources))
         result2 = list(filter(lambda resource: resource['r_name'] == r_name, result))
