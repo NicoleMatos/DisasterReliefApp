@@ -7,7 +7,14 @@ class SupplierHandler:
     def build_supplier_dict(self, row):
         result = {}
         result['s_id'] = row[0]
-        result['bank_account'] = row[1]
+        result['u_id'] = row[1]
+        result['bank_account'] = row[2]
+        result['u_email'] = row[3]
+        result['u_password'] = row[4]
+        result['u_name'] = row[5]
+        result['u_lastname'] = row[6]
+        result['u_region'] = row[7]
+        result['u_age'] = row[8]
         return result
 
     def build_announcement_dict(self, row):
@@ -83,7 +90,7 @@ class SupplierHandler:
             result = self.build_supplier_dict(row)
         return jsonify(Supplier=result)
 
-    def getAnnouncementsBySupplierId(self, s_id):
+    def getAnnouncementsBySupplierID(self, s_id):
         dao = SupplierDAO()
         if not dao.getSupplierById(s_id):
             return jsonify(Error="Supplier Not Found"), 404
@@ -94,7 +101,7 @@ class SupplierHandler:
             result_list.append(result)
         return jsonify(Announcements=result_list)
 
-    def getResourcesBySupplierId(self, s_id):
+    def getResourcesBySupplierID(self, s_id):
         dao = SupplierDAO()
         if not dao.getSupplierById(s_id):
             return jsonify(Error="Supplier Not Found"), 404
@@ -105,7 +112,7 @@ class SupplierHandler:
             result_list.append(result)
         return jsonify(Resources=result_list)
 
-    def getTransactionsBySupplierId(self, s_id):
+    def getTransactionsBySupplierID(self, s_id):
         dao = SupplierDAO()
         if not dao.getSupplierById(s_id):
             return jsonify(Error="Supplier Not Found"), 404

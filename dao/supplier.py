@@ -16,7 +16,7 @@ class SupplierDAO:
 
     def getAllSuppliers(self):
         cursor = self.conn.cursor()
-        query = "select * from supplier;"
+        query = "select * from supplier natural inner join user_table;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -29,7 +29,7 @@ class SupplierDAO:
 
     def getSuppliersByRegion(self, region):
         cursor = self.conn.cursor()
-        query = "select s_id, bank_account from supplier natural inner join user_table where u_region = %s;"
+        query = "select * from supplier natural inner join user_table where u_region = %s;"
         cursor.execute(query, (region,))
         result = []
         for row in cursor:
@@ -42,7 +42,7 @@ class SupplierDAO:
 
     def getSupplierById(self, sid):
         cursor = self.conn.cursor()
-        query = "select * from supplier where s_id = %s;"
+        query = "select * from supplier natural inner join user_table where s_id = %s;"
         cursor.execute(query, (sid,))
         result = cursor.fetchone()
         return result
