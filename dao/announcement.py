@@ -25,7 +25,7 @@ class AnnouncementDAO:
         return result
 
     # ===================================================================================================================
-    #                                           get things by id
+    #                                           get announcement by id
     # ===================================================================================================================
 
 
@@ -36,93 +36,60 @@ class AnnouncementDAO:
         result = cursor.fetchone()
         return result
 
+    # ===================================================================================================================
+    #                                           get announcement by date
+    # ===================================================================================================================
 
 
-    def getAnnouncementByRegion(self,u_region):
-        # completar
-        return
-
-
-
-    def getRequestsByClientID(self, c_id):
+    def getAnnouncementsByDate(self, a_date):
         cursor = self.conn.cursor()
-        query = "select * from request where c_id = %s;"
-        cursor.execute(query, (c_id,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-
-    def getCreditCardsByClientID(self, c_id):
-        cursor = self.conn.cursor()
-        query = "select * from credit_card where c_id = %s;"
-        cursor.execute(query, (c_id,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-
-    def getSuppliersByClientID(self, c_id):
-        cursor = self.conn.cursor()
-        query = "select * from user_table where u_id IN (select u_id from _transaction natural inner join supplier where c_id = %s);"
-        cursor.execute(query, (c_id,))
+        query = "select * from announcement where a_date = %s;"
+        cursor.execute(query, (a_date,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
     # ===================================================================================================================
-    #                                           get clients by Name
+    #                                           get announcement by supplier and date
     # ===================================================================================================================
 
-    def getClientByName(self,u_name):
+    def getAnnouncementsBySupplierAndDate(self,s_id,a_date):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_name = %s;"
-        cursor.execute(query,(u_name,))
+        query = "select * from announcement where and s_id = %s and a_date = %s;"
+        cursor.execute(query, (s_id,a_date,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
     # ===================================================================================================================
-    #                                           get clients by Lastname
+    #                                           get announcement by supplier
     # ===================================================================================================================
 
-    def getClientByLastName(self,u_lastname):
+    def getAnnouncementsBySupplier(self,s_id):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_lastname = %s;"
-        cursor.execute(query, (u_lastname,))
+        query = "select * from announcement where s_id = %s;"
+        cursor.execute(query, (s_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    # ===================================================================================================================
+    #                                           get announcement by region
+    # ===================================================================================================================
+
+
+    def getAnnouncementByRegion(self,region):
+        cursor = self.conn.cursor()
+        query = "select a_id,s_id,r_id,a_price,a_date,a_sold_out,a_initial_qty,a_curr_qty from announcement natural inner join user_table natural inner join supplier where u_region=%s;"
+        cursor.execute(query, (region,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
-    # ===================================================================================================================
-    #                                           get clients by Name and Lastname
-    # ===================================================================================================================
 
 
-    def getClientByNameAndLastName(self,u_name,u_lastname):
-        cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_name = %s and u_lastname = %s;"
-        cursor.execute(query,(u_name,u_lastname))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
-
-
-    # ===================================================================================================================
-    #                                           get clients by region
-    # ===================================================================================================================
-
-    def getClientByRegion(self,u_region):
-        cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_region = %s;"
-        cursor.execute(query,(u_region,))
-        result = []
-        for row in cursor:
-            result.append(row)
-        return result
 
 

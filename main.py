@@ -120,7 +120,7 @@ def getAllAnnouncements():
         return AnnouncementHandler().searchAnnouncements(request.args)
 
 
-@app.route('/announcement/<int:a_id>/')
+@app.route('/announcements/<int:a_id>/')
 def getAnnouncementByID(a_id):
     return AnnouncementHandler().getAnnouncementByID(a_id)
 
