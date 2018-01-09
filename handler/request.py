@@ -1,25 +1,16 @@
 from flask import jsonify
-
+from dao.request import RequestDAO
 
 class RequestHandler:
 
-    def request(self):
-        result = [
-            {
-                'req_id': 1,
-                'c_id': 1,
-                'req_date': '02/10/2017',
-                'req_qty': 4
-            },
-            {
-                'req_id': 2,
-                'c_id': 2,
-                'req_date': '02/15/2017',
-                'req_qty': 2
-            }
-        ]
+    def build_request_dict(self, row):
+        result = {}
+        result['req_id'] = row[0]
+        result['c_id'] = row[1]
+        result['r_id'] = row[2]
+        result['req_qty'] = row[3]
+        result['req_date'] = row[4]
         return result
-
 
     # ===================================================================================================================
     #                                          search for requests
@@ -28,55 +19,44 @@ class RequestHandler:
     def searchRequests(self, args):
         client = args.get('client')
         date = args.get('date')
-        result = []
-        if date and client:
-            result = self.getRequestsByClientAndDate(client, date)
-        elif client:
-            result = self.getRequestsByClient(client)
-        elif date:
-            result = self.getRequestsByDate(date)
-        if len(result) == 0:
-            return jsonify(Error="Request Not Found"), 404
-        return jsonify(Result=result)
+        dao = RequestDAO()
+        if (len(args) == 2) and date and client:
+            request_list = dao.getRequestsByClientAndDate(client, date)
+        elif (len(args) == 1) and client:
+            request_list = dao.getRequestsByClient(client)
+        elif (len(args) == 1) and date:
+            request_list = dao.getRequestsByDate(date)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in request_list:
+            result = self.build_request_dict(row)
+            result_list.append(result)
+        return jsonify(Request=result_list)
 
     # ===================================================================================================================
-    #                                           get all transactions
+    #                                           get all requests
     # ===================================================================================================================
 
     def getAllRequests(self):
-        return jsonify(Requests=self.request())
+        dao = RequestDAO()
+        request_list = dao.getAllRequests()
+        result_list = []
+        for row in request_list:
+            result = self.build_request_dict(row)
+            result_list.append(result)
+        return jsonify(Requests=result_list)
 
     # ===================================================================================================================
     #                                           get things by id
     # ===================================================================================================================
 
     def getRequestByID(self, req_id):
-        result = list(filter(lambda request: request['req_id'] == req_id, self.request()))
-        if len(result) == 0:
+        dao = RequestDAO()
+        row = dao.getRequestById(req_id)
+        if not row:
             return jsonify(Error="Request Not Found"), 404
-        return jsonify(result)
+        else:
+            result = self.build_request_dict(row)
+        return jsonify(Request=result)
 
-    # ===================================================================================================================
-    #                                           get requests by client
-    # ===================================================================================================================
-
-    def getRequestsByClient(self, client):
-        result = list(filter(lambda request: request['c_id'] == client, self.request()))
-        return result
-
-    # ===================================================================================================================
-    #                                           get requests by date
-    # ===================================================================================================================
-
-    def getRequestsByDate(self, date):
-        result = list(filter(lambda request: request['req_date'] == date, self.request()))
-        return result
-
-    # ===================================================================================================================
-    #                                     get requests by client and date
-    # ===================================================================================================================
-
-    def getRequestsByClientAndDate(self, client, date):
-        result = list(filter(lambda request: request['c_id'] == client, self.request()))
-        result2 = list(filter(lambda request: request['req_date'] == date, result))
-        return result2

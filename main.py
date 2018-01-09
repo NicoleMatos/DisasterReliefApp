@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Disaster Relief \n Welcome Manuel Rodriguez! \n Hope you enjoy it.'
+    return 'Disaster Relief Welcome Manuel Rodriguez! Hope you enjoy it.'
 
 
 # =======================================================================================================================
