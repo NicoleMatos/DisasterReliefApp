@@ -20,12 +20,15 @@ class TransactionHandler:
 
     def getAllTransactions(self):
         dao = TransactionDAO()
-        transactions_list = dao.getAllTransactions()
-        result_list = []
-        for row in transactions_list:
-            result = self.build_transaction_dict(row)
-            result_list.append(result)
-        return jsonify(Transactions=result_list)
+        transaction_list = dao.getAllTransactions()
+        if not transaction_list:
+            return jsonify(Error="Transaction Not Found"), 404
+        else:
+            result_list = []
+            for row in transaction_list:
+                result = self.build_transaction_dict(row)
+                result_list.append(result)
+        return jsonify(Transaction=result_list)
 
     # ===================================================================================================================
     #                                          search for transactions
@@ -52,10 +55,13 @@ class TransactionHandler:
             transaction_list = dao.getTransactionsByClient(client)
         else:
             return jsonify(Error="Malformed query string"), 400
-        result_list = []
-        for row in transaction_list:
-            result = self.build_transaction_dict(row)
-            result_list.append(result)
+        if not transaction_list:
+            return jsonify(Error="Transaction Not Found"), 404
+        else:
+            result_list = []
+            for row in transaction_list:
+                result = self.build_transaction_dict(row)
+                result_list.append(result)
         return jsonify(Transaction=result_list)
 
     # ===================================================================================================================

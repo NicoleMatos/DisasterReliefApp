@@ -28,11 +28,15 @@ class RequestHandler:
             request_list = dao.getRequestsByDate(date)
         else:
             return jsonify(Error="Malformed query string"), 400
-        result_list = []
-        for row in request_list:
-            result = self.build_request_dict(row)
-            result_list.append(result)
+        if not request_list:
+            return jsonify(Error="Request Not Found"), 404
+        else:
+            result_list = []
+            for row in request_list:
+                result = self.build_request_dict(row)
+                result_list.append(result)
         return jsonify(Request=result_list)
+
 
     # ===================================================================================================================
     #                                           get all requests
