@@ -6,8 +6,8 @@ class SupplierHandler:
 
     def build_supplier_dict(self, row):
         result = {}
-        result['s_id'] = row[0]
-        result['u_id'] = row[1]
+        result['u_id'] = row[0]
+        result['s_id'] = row[1]
         result['bank_account'] = row[2]
         result['u_email'] = row[3]
         result['u_password'] = row[4]
