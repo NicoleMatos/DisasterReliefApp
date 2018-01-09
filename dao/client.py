@@ -17,7 +17,7 @@ class ClientDAO:
 
     def getAllClients(self):
         cursor = self.conn.cursor()
-        query = "select * from user_table where u_id IN (select u_id from client);"
+        query = "select * from user_table natural inner join client;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -38,7 +38,7 @@ class ClientDAO:
 
     def getTransactionsByClientID(self, c_id):
         cursor = self.conn.cursor()
-        query = "select * from _transaction where c_id = %s;"
+        query = "select * from transaction where c_id = %s;"
         cursor.execute(query,(c_id,))
         result = []
         for row in cursor:
@@ -65,7 +65,7 @@ class ClientDAO:
 
     def getSuppliersByClientID(self, c_id):
         cursor = self.conn.cursor()
-        query = "select * from user_table where u_id IN (select u_id from _transaction natural inner join supplier where c_id = %s);"
+        query = "select * from user_table natural inner join supplier where s_id IN (select s_id from transaction where c_id = %s);"
         cursor.execute(query, (c_id,))
         result = []
         for row in cursor:
@@ -117,10 +117,49 @@ class ClientDAO:
     #                                           get clients by region
     # ===================================================================================================================
 
-    def getClientByRegion(self,u_region):
+    def getClientByRegion(self,region):
         cursor = self.conn.cursor()
         query = "select * from user_table natural inner join client where u_region = %s;"
-        cursor.execute(query,(u_region,))
+        cursor.execute(query,(region,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
+    #                                           get clients by region, name and lastname
+    # ===================================================================================================================
+
+    def getClientByRegionAndNameAndLastname(self, region, name, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from client natural inner join user_table where u_region = %s and u_name = %s and u_lastname = %s;"
+        cursor.execute(query, (region, name, lastname))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
+    #                                           get clients by region and  name
+    # ===================================================================================================================
+
+    def getClientByRegionAndName(self, region, name):
+        cursor = self.conn.cursor()
+        query = "select * from client natural inner join user_table where u_region = %s and u_name = %s;"
+        cursor.execute(query, (region, name))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
+    #                                           get clients by region and lastname
+    # ===================================================================================================================
+
+    def getClientByRegionAndLastname(self, region, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from client natural inner join user_table where u_region = %s and u_lastname = %s;"
+        cursor.execute(query, (region, lastname))
         result = []
         for row in cursor:
             result.append(row)

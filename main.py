@@ -69,8 +69,7 @@ def getAllClients():
 
 @app.route('/clients/<int:c_id>/')
 def getClientByID(c_id):
-    if not request.args:
-        return ClientHandler().getClientByID(c_id)
+    return ClientHandler().getClientByID(c_id)
 
 
 @app.route('/clients/<int:c_id>/requests/')
@@ -85,7 +84,11 @@ def getTransactionsByClientID(c_id):
 
 @app.route('/clients/<int:c_id>/creditcards/')
 def getCCardsByClientID(c_id):
-    return ClientHandler().getCCardsByClientID(c_id)
+    return ClientHandler().getCreditCardsByClientID(c_id)
+
+@app.route('/clients/<int:c_id>/suppliers/')
+def getSupplierByClientID(c_id):
+    return ClientHandler().getSuppliersByClientID(c_id)
 
 
 # =======================================================================================================================
