@@ -27,10 +27,64 @@ class SupplierDAO:
     #                                           get suppliers by Region
     # ===================================================================================================================
 
+    def getSuppliersByRegionAndNameAndLastname(self, region, name, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_region = %s and u_name = %s and u_lastname = %s;"
+        cursor.execute(query, (region, name, lastname))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByRegionAndName(self, region, name):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_region = %s and u_name = %s;"
+        cursor.execute(query, (region, name))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByRegionAndLastname(self, region, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_region = %s and u_lastname = %s;"
+        cursor.execute(query, (region, lastname))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByNameAndLastname(self, name, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_name = %s and u_lastname = %s;"
+        cursor.execute(query, (name, lastname))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def getSuppliersByRegion(self, region):
         cursor = self.conn.cursor()
         query = "select * from supplier natural inner join user_table where u_region = %s;"
         cursor.execute(query, (region,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByName(self, name):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_name = %s;"
+        cursor.execute(query, (name,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSuppliersByLastname(self, lastname):
+        cursor = self.conn.cursor()
+        query = "select * from supplier natural inner join user_table where u_lastname = %s;"
+        cursor.execute(query, (lastname,))
         result = []
         for row in cursor:
             result.append(row)
