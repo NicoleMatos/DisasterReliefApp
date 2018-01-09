@@ -7,13 +7,8 @@ class ClientHandler:
 
     def build_client_dict(self,row):
         result = {}
-        result['c_id'] = row[0]
-        result['u_id'] = row[1]
-        return result
-
-    def build_user_dict(self, row):
-        result = {}
         result['u_id'] = row[0]
+        result['c_id'] = row[7]
         result['u_email'] = row[1]
         result['u_password'] = row[2]
         result['u_name'] = row[3]
@@ -54,9 +49,15 @@ class ClientHandler:
 
     def build_supplier_dict(self, row):
         result = {}
-        result['s_id'] = row[0]
-        result['u_id'] = row[1]
-        result['bank_account'] = row[2]
+        result['u_id'] = row[0]
+        result['s_id'] = row[7]
+        result['bank_account'] = row[8]
+        result['u_email'] = row[1]
+        result['u_password'] = row[2]
+        result['u_name'] = row[3]
+        result['u_lastname'] = row[4]
+        result['u_region'] = row[5]
+        result['u_age'] = row[6]
         return result
 
     # ===================================================================================================================
@@ -64,23 +65,30 @@ class ClientHandler:
     # ===================================================================================================================
 
     def searchClients(self, args):
-        name = args.get("name")
-        lastname = args.get("lastname")
+        region = args.get('region')
+        name = args.get('name')
+        lastname = args.get('lastname')
         dao = ClientDAO()
-        clients_list = []
-        if (len(args) == 2) and name and lastname:
-            clients_list = dao.getClientByNameAndLastName(name,lastname)
+        if (len(args) == 3) and region and name and lastname:
+            client_list = dao.getClientByRegionAndNameAndLastname(region, name, lastname)
+        elif (len(args) == 2) and region and name:
+            client_list = dao.getClientByRegionAndName(region, name)
+        elif (len(args) == 2) and region and lastname:
+            client_list = dao.getClientByRegionAndName(region, lastname)
+        elif (len(args) == 2) and name and lastname:
+            client_list = dao.getClientByNameAndLastName(name, lastname)
+        elif (len(args) == 1) and region:
+            client_list = dao.getClientByRegion(region)
         elif (len(args) == 1) and name:
-            clients_list = dao.getClientByName(name)
+            client_list = dao.getClientByName(name)
         elif (len(args) == 1) and lastname:
-            clients_list = dao.getClientByLastName(lastname)
+            client_list = dao.getClientByLastName(lastname)
         else:
             return jsonify(Error="Malformed query string"), 400
         result_list = []
-        for row in clients_list:
+        for row in client_list:
             result = self.build_client_dict(row)
             result_list.append(result)
-
         return jsonify(Client=result_list)
 
 
@@ -200,4 +208,6 @@ class ClientHandler:
             client = self.build_client_dict(row)
 
         return jsonify(Client=client)
+
+
 
