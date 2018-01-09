@@ -70,7 +70,7 @@ class SupplierHandler:
         elif (len(args) == 2) and region and name:
             supplier_list = dao.getSuppliersByRegionAndName(region, name)
         elif (len(args) == 2) and region and lastname:
-            supplier_list = dao.getSuppliersByRegionAndName(region, lastname)
+            supplier_list = dao.getSuppliersByRegionAndLastname(region, lastname)
         elif (len(args) == 2) and name and lastname:
             supplier_list = dao.getSuppliersByNameAndLastname(name, lastname)
         elif (len(args) == 1) and region:

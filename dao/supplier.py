@@ -24,7 +24,7 @@ class SupplierDAO:
         return result
 
     # ===================================================================================================================
-    #                                           get suppliers by Region
+    #                                           get suppliers by things
     # ===================================================================================================================
 
     def getSuppliersByRegionAndNameAndLastname(self, region, name, lastname):

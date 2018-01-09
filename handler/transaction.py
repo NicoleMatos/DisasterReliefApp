@@ -1,27 +1,31 @@
 from flask import jsonify
+from dao.transaction import TransactionDAO
 
 class TransactionHandler:
 
-    def transaction(self):
-        result = [
-            {
-                't_id': 1,
-                's_id': 1,
-                'c_id': 1,
-                't_price': 5.00,
-                't_date': '02/13/2017',
-                't_qty': 4
-            },
-            {
-                't_id': 2,
-                's_id': 2,
-                'c_id': 2,
-                't_price': 10.00,
-                't_date': '02/15/2017',
-                't_qty': 2
-            }
-        ]
+    def build_transaction_dict(self, row):
+        result = {}
+        result['t_id'] = row[0]
+        result['s_id'] = row[1]
+        result['c_id'] = row[2]
+        result['r_id'] = row[3]
+        result['t_price'] = row[4]
+        result['t_date'] = row[5]
+        result['t_qty'] = row[6]
         return result
+
+    # ===================================================================================================================
+    #                                           get all transactions
+    # ===================================================================================================================
+
+    def getAllTransactions(self):
+        dao = TransactionDAO()
+        transactions_list = dao.getAllTransactions()
+        result_list = []
+        for row in transactions_list:
+            result = self.build_transaction_dict(row)
+            result_list.append(result)
+        return jsonify(Transactions=result_list)
 
     # ===================================================================================================================
     #                                          search for transactions
@@ -31,54 +35,38 @@ class TransactionHandler:
         date = args.get('date')
         supplier = args.get('supplier')
         client = args.get('client')
-        result = []
-        if date:
-            result = self.getTransactionsByDate(date)
-        elif supplier:
-            result = self.getTransactionsBySupplier(supplier)
-        elif client:
-            result = self.getTransactionsByClient(client)
-        if len(result) == 0:
-            return jsonify(Error="Transaction Not Found"), 404
-        return jsonify(Result=result)
-
-    # ===================================================================================================================
-    #                                           get all transactions
-    # ===================================================================================================================
-
-    def getAllTransactions(self):
-        return jsonify(Transactions=self.transaction())
+        dao = TransactionDAO()
+        if (len(args) == 3) and date and supplier and client:
+            transaction_list = dao.getTransactionsByDateAndSupplierAndClient(date, supplier, client)
+        elif (len(args) == 2) and date and supplier:
+            transaction_list = dao.getTransactionsByDateAndSupplier(date, supplier)
+        elif (len(args) == 2) and date and client:
+            transaction_list = dao.getTransactionsByDateAndClient(date, client)
+        elif (len(args) == 2) and supplier and client:
+            transaction_list = dao.getTransactionsBySupplierAndClient(supplier, client)
+        elif (len(args) == 1) and date:
+            transaction_list = dao.getTransactionsByDate(date)
+        elif (len(args) == 1) and supplier:
+            transaction_list = dao.getTransactionsBySupplier(supplier)
+        elif (len(args) == 1) and client:
+            transaction_list = dao.getTransactionsByClient(client)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in transaction_list:
+            result = self.build_transaction_dict(row)
+            result_list.append(result)
+        return jsonify(Transaction=result_list)
 
     # ===================================================================================================================
     #                                           get things by id
     # ===================================================================================================================
 
     def getTransactionByID(self, t_id):
-        result = list(filter(lambda transaction: transaction['t_id'] == t_id, self.transaction()))
-        if len(result) > 0:
-            return jsonify(Result=result)
-        return jsonify(Error="Transaction Not Found"), 404
-
-    # ===================================================================================================================
-    #                                           get transactions by date
-    # ===================================================================================================================
-
-    def getTransactionsByDate(self, date):
-        result = list(filter(lambda transaction: transaction['t_date'] == date, self.transaction()))
-        return result
-
-    # ===================================================================================================================
-    #                                         get transactions by supplier
-    # ===================================================================================================================
-
-    def getTransactionsBySupplier(self, supplier):
-        result = list(filter(lambda transaction: transaction['s_id'] == supplier, self.transaction()))
-        return result
-
-    # ===================================================================================================================
-    #                                           get transactions by client
-    # ===================================================================================================================
-
-    def getTransactionsByClient(self, client):
-        result = list(filter(lambda transaction: transaction['c_id'] == client, self.transaction()))
-        return result
+        dao = TransactionDAO()
+        row = dao.getTransactionById(t_id)
+        if not row:
+            return jsonify(Error="Transaction Not Found"), 404
+        else:
+            result = self.build_transaction_dict(row)
+        return jsonify(Transaction=result)
