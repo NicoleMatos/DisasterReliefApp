@@ -89,6 +89,8 @@ class ClientHandler:
         for row in client_list:
             result = self.build_client_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="Client Not Found"), 404
         return jsonify(Client=result_list)
 
 
@@ -103,6 +105,8 @@ class ClientHandler:
         for row in clients_list:
             result = self.build_client_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="Client Not Found"), 404
         return jsonify(Clients=result_list)
 
     # ===================================================================================================================
@@ -118,7 +122,8 @@ class ClientHandler:
         for row in transactions_list:
             result = self.build_transaction_dict(row)
             result_list.append(result)
-
+        if len(result_list) == 0:
+            return jsonify(Error="Transactions Not Found"), 404
         return jsonify(Transactions=result_list)
 
     def getRequestsByClientID(self,c_id):
@@ -130,6 +135,8 @@ class ClientHandler:
         for row in requests_list:
             result = self.build_request_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="Request Not Found"), 404
         return jsonify(Requests=result_list)
 
     def getCreditCardsByClientID(self,c_id):
@@ -141,6 +148,8 @@ class ClientHandler:
         for row in cards_list:
             result = self.build_credit_Card_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="Credit Card Not Found"), 404
         return jsonify(Cards=result_list)
 
 
@@ -153,6 +162,8 @@ class ClientHandler:
         for row in suppliers_list:
             result = self.build_supplier_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="Supplier Not Found"), 404
         return jsonify(Suppliers=result_list)
 
     def getClientByID(self, c_id):

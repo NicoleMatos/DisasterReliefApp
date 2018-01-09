@@ -37,6 +37,8 @@ class UserHandler:
         for row in user_list:
             result = self.build_user_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="User Not Found"), 404
         return jsonify(User=result_list)
 
 
@@ -50,6 +52,8 @@ class UserHandler:
         for row in user_list:
             result = self.build_user_dict(row)
             result_list.append(result)
+        if len(result_list) == 0:
+            return jsonify(Error="User Not Found"), 404
         return jsonify(Users=result_list)
 
     # ===================================================================================================================
