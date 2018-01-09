@@ -38,6 +38,8 @@ class AnnouncementHandler:
             for row in announcement_list:
                 result = self.build_announcement_dict(row)
                 result_list.append(result)
+            if len(result_list) == 0:
+                return jsonify(Error="Announcement Not Found"), 404
             return jsonify(Announcement=result_list)
 
 # ===================================================================================================================
@@ -51,6 +53,8 @@ class AnnouncementHandler:
             for row in resources_list:
                 result = self.build_announcement_dict(row)
                 result_list.append(result)
+            if len(result_list) == 0:
+                return jsonify(Error="Announcement Not Found"), 404
             return jsonify(Announcement=result_list)
 
 # ===================================================================================================================

@@ -1,140 +1,70 @@
 from flask import jsonify
+from dao.administrator import AdministratorDAO
 
 class AdministratorHandler:
 
-    def administrator(self):
-        result = [
-            {
-                'ad_id': 0,
-                'u_id': 0
-            },
-            {
-                'ad_id': 1,
-                'u_id':1
-            }
-        ]
-        return result
 
-    def user(self):
-        result = [
-            {
-                'u_id': 1,
-                'u_email': 'jose.rivera@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Jose',
-                'u_lastName':'Rivera',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location' : 'Andalurge',
-                'u_age' : 24
-
-            },
-
-            {
-                'u_id': 2,
-                'u_email': 'orla.torres@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Orlando',
-                'u_lastName': 'Torres',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 12
-
-            },
-
-            {
-                'u_id': 3,
-                'u_email': 'nico.matos@gmail.com',
-                'u_password': '1234!@',
-                'u_name': 'Nicole',
-                'u_lastName': 'Matos',
-                'u_address': 'Carr.123 km 0.8',
-                'u_location': 'Andalurge',
-                'u_age': 30
-
-            }
-        ]
+    def build_administrator_dict(self, row):
+        result = {}
+        result['ad_id'] = row[1]
+        result['u_id'] = row[0]
+        result['u_email'] = row[2]
+        result['u_password'] = row[3]
+        result['u_name'] = row[4]
+        result['u_lastname'] = row[5]
+        result['u_region'] = row[6]
+        result['u_age'] = row[7]
         return result
 
 
-    # ===================================================================================================================
-    #                                          search for administrators
-    # ===================================================================================================================
+# ===================================================================================================================
+#                                        search for Administrator
+# ===================================================================================================================
 
     def searchAdministrator(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
-        result = []
-        if name and lastname:
-            result = self.getAdministratorByNameAndLastName(name, lastname)
-        elif name:
-            result = self.getAdministratorByName(self, name)
-        elif lastname:
-            result = self.getAdministratorByLastName(self, lastname)
-        if len(result) == 0:
+        dao = AdministratorDAO()
+        if (len(args) == 2) and name and lastname:
+            administrator_list = dao.getAdministratorByNameAndLastName(name, lastname)
+        elif (len(args) == 1) and name:
+            administrator_list = dao.getAdministratorByName(name)
+        elif (len(args) == 1) and lastname:
+            administrator_list = dao.getAdministratorByLastName(lastname)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in administrator_list:
+            result = self.build_administrator_dict(row)
+            result_list.append(result)
+        if len(result_list)==0:
             return jsonify(Error="Administrator Not Found"), 404
-        return jsonify(Result=result)
+        return jsonify(Administrator=result_list)
 
-    # ===================================================================================================================
-    #                                           get all administrators
-    # ===================================================================================================================
-
+# ===================================================================================================================
+#                                           get all Administrator
+# ===================================================================================================================
 
     def getAllAdministrators(self):
-        return jsonify(Administrators=self.searchAdministratosInUsers())
+        dao = AdministratorDAO()
+        ad_list = dao.getAllAdministrators()
+        result_list = []
+        for row in ad_list:
+            result = self.build_administrator_dict(row)
+            result_list.append(result)
+        if len(result_list)==0:
+            return jsonify(Error="Administrator Not Found"), 404
+        return jsonify(Administrator=result_list)
 
+# ===================================================================================================================
+#                                           get Administrator by ID
+# ===================================================================================================================
 
-
-    # ===================================================================================================================
-    #                                           get administrator by ID
-    # ===================================================================================================================
-
-
-    def getAdministratorByID(self,ad_id):
-        administrators = self.searchAdministratosInUsers()
-        result = list(filter(lambda admi: admi['ad_id'] == ad_id, administrators))
-        if len(result) > 0:
-            return jsonify(Result=result)
-        return jsonify(Error="Administrator Not Found"), 404
-
-
-    # ===================================================================================================================
-    #                                           get administrator by Name
-    # ===================================================================================================================
-
-    def getAdministratorByName(self, name):
-        admi = self.searchAdministratosInUsers()
-        result = list(filter(lambda administrator: administrator['u_name'] == name, admi))
-        return result
-
-    # ===================================================================================================================
-    #                                           get administrator by Last Name
-    # ===================================================================================================================
-
-    def getAdministratorByLastName(self, lastname):
-        admi = self.searchAdministratosInUsers()
-        result = list(filter(lambda administrator: administrator['u_name'] == lastname, admi))
-        return result
-
-    # ===================================================================================================================
-    #                                     get administrator by Name and Last Name
-    # ===================================================================================================================
-
-    def getAdministratorByNameAndLastName(self, name, lastname):
-        admi = self.searchAdministratosInUsers()
-        result = list(filter(lambda admin: admin['u_name'] == name, admi))
-        result2 = list(filter(lambda admin: admin['u_lastName'] == lastname, result))
-        return result2
-
-    # ===================================================================================================================
-    #                                           method to hard-wire information
-    # ===================================================================================================================
-
-    def searchAdministratosInUsers(self):
-        admiDic = self.administrator()
-        usersDic = self.users()
-        result = []
-        for i in admiDic:
-            for j in usersDic:
-                if i['u_id'] == j['u_id']:
-                    result.append(j)
-        return result
+    def getAdministratorByID(self, ad_id):
+        dao = AdministratorDAO()
+        row = dao.getAdministratorById(ad_id)
+        if not row:
+            return jsonify(Error="Administrator Not Found"), 404
+        else:
+            result = self.build_administrator_dict(row)
+        return jsonify(Administrator=result)

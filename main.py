@@ -199,14 +199,14 @@ def getUserByID(u_id):
 @app.route('/administrators/')
 def getAllAdministrators():
     if not request.args:
-        return AdministratorHandler.getAllAdministrators()
+        return AdministratorHandler().getAllAdministrators()
     else:
-        return AdministratorHandler.searchAdministrator(request.args)
+        return AdministratorHandler().searchAdministrator(request.args)
 
 
 @app.route('/administrators/<int:a_id>/')
 def getAdministratorByID(a_id):
-    return AdministratorHandler.getAdministratorByID(a_id)
+    return AdministratorHandler().getAdministratorByID(a_id)
 
 
 # =======================================================================================================================
