@@ -1,25 +1,16 @@
 from flask import jsonify
-
+from dao.ccard import CCardDAO
 
 class CCardHandler:
 
-    def ccard(self):
-        result = [
-            {
-                'cc_id': 1,
-                'cc_name': 'Orlando',
-                'cc_lastName': 'Flores',
-                'cc_number': '05/13/2017',
-                'cc_exp_date': '07/22/1992'
-            },
-            {
-                'cc_id': 2,
-                'cc_name': 'Pedro',
-                'cc_lastName': 'Rivera',
-                'cc_number': '02/13/2017',
-                'cc_exp_date': '02/14/2012'
-            }
-        ]
+    def build_ccard_dict(self, row):
+        result = {}
+        result['cc_id'] = row[0]
+        result['c_id'] = row[1]
+        result['cc_name'] = row[2]
+        result['cc_lastname'] = row[3]
+        result['cc_number'] = row[4]
+        result['cc_exp_date'] = row[5]
         return result
 
     # ===================================================================================================================
@@ -29,16 +20,20 @@ class CCardHandler:
     def searchCCards(self, args):
         name = args.get('name')
         lastname = args.get('lastname')
-        result = []
-        if name and lastname:
-            result = self.getCCardByNameAndLastName(name, lastname)
-        elif name:
-            result = self.getCCardByName(self, name)
-        elif lastname:
-            result = self.getCCardByLastName(self, lastname)
-        if len(result) == 0:
-            return jsonify(Error="Credit Card Not Found"), 404
-        return jsonify(Result=result)
+        dao = CCardDAO()
+        if (len(args) == 2) and name and lastname:
+            ccard_list = dao.getCCardsByNameAndLastName(name, lastname)
+        elif (len(args) == 1) and name:
+            ccard_list = dao.getCCardsByName(name)
+        elif (len(args) == 1) and lastname:
+            ccard_list = dao.getCCardsByLastname(lastname)
+        else:
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in ccard_list:
+            result = self.build_ccard_dict(row)
+            result_list.append(result)
+        return jsonify(CCard=result_list)
 
     # ===================================================================================================================
     #                                           get all credit cards
