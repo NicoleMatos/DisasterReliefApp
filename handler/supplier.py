@@ -61,21 +61,31 @@ class SupplierHandler:
     # ===================================================================================================================
 
     def searchSuppliers(self, args):
-        if len(args) > 1:
-            return jsonify(Error='Malformed search string.'), 400
+        region = args.get('region')
+        name = args.get('name')
+        lastname = args.get('lastname')
+        dao = SupplierDAO()
+        if (len(args) == 3) and region and name and lastname:
+            supplier_list = dao.getSuppliersByRegionAndNameAndLastname(region, name, lastname)
+        elif (len(args) == 2) and region and name:
+            supplier_list = dao.getSuppliersByRegionAndName(region, name)
+        elif (len(args) == 2) and region and lastname:
+            supplier_list = dao.getSuppliersByRegionAndName(region, lastname)
+        elif (len(args) == 2) and name and lastname:
+            supplier_list = dao.getSuppliersByNameAndLastname(name, lastname)
+        elif (len(args) == 1) and region:
+            supplier_list = dao.getSuppliersByRegion(region)
+        elif (len(args) == 1) and name:
+            supplier_list = dao.getSuppliersByName(name)
+        elif (len(args) == 1) and lastname:
+            supplier_list = dao.getSuppliersByLastname(lastname)
         else:
-            region = args.get('region')
-            if region:
-                dao = SupplierDAO()
-                supplier_list = dao.getSuppliersByRegion(region)
-                result_list = []
-                for row in supplier_list:
-                    result = self.build_supplier_dict(row)
-                    result_list.append(result)
-                return jsonify(Suppliers=result_list)
-            else:
-                return jsonify(Error='Malformed search string.'), 400
-
+            return jsonify(Error="Malformed query string"), 400
+        result_list = []
+        for row in supplier_list:
+            result = self.build_supplier_dict(row)
+            result_list.append(result)
+        return jsonify(Supplier=result_list)
 
     # ===================================================================================================================
     #                                           get things by supplier id
