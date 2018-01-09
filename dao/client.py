@@ -17,7 +17,7 @@ class ClientDAO:
 
     def getAllClients(self):
         cursor = self.conn.cursor()
-        query = "select * from user_table where u_id IN (select u_id from client);"
+        query = "select * from client natural inner join user_table;"
         cursor.execute(query)
         result = []
         for row in cursor:

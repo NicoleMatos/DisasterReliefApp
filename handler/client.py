@@ -7,19 +7,14 @@ class ClientHandler:
 
     def build_client_dict(self,row):
         result = {}
-        result['c_id'] = row[0]
-        result['u_id'] = row[1]
-        return result
-
-    def build_user_dict(self, row):
-        result = {}
+        result['c_id'] = row[1]
         result['u_id'] = row[0]
-        result['u_email'] = row[1]
-        result['u_password'] = row[2]
-        result['u_name'] = row[3]
-        result['u_lastname'] = row[4]
-        result['u_region'] = row[5]
-        result['u_age'] = row[6]
+        result['u_email'] = row[2]
+        result['u_password'] = row[3]
+        result['u_name'] = row[4]
+        result['u_lastname'] = row[5]
+        result['u_region'] = row[6]
+        result['u_age'] = row[7]
         return result
 
     def build_transaction_dict(self, row):
@@ -153,9 +148,8 @@ class ClientHandler:
         if not row:
             return jsonify(Error="Client Not Found"), 404
         else:
-            client = self.build_client_dict(row)
-
-        return jsonify(Client=client)
+            result = self.build_client_dict(row)
+        return jsonify(Client=result)
 
 
     # ===================================================================================================================
