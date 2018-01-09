@@ -29,54 +29,40 @@ class CCardHandler:
             ccard_list = dao.getCCardsByLastname(lastname)
         else:
             return jsonify(Error="Malformed query string"), 400
-        result_list = []
-        for row in ccard_list:
-            result = self.build_ccard_dict(row)
-            result_list.append(result)
-        return jsonify(CCard=result_list)
+        if not ccard_list:
+            return jsonify(Error="Credit Card Not Found"), 404
+        else:
+            result_list = []
+            for row in ccard_list:
+                result = self.build_ccard_dict(row)
+                result_list.append(result)
+        return jsonify(CreaditCard=result_list)
 
     # ===================================================================================================================
     #                                           get all credit cards
     # ===================================================================================================================
 
     def getAllCCards(self):
-        return jsonify(CCards=self.ccard())
+        dao = CCardDAO()
+        ccard_list = dao.getAllCCards()
+        if not ccard_list:
+            return jsonify(Error="Credit Card Not Found"), 404
+        else:
+            result_list = []
+            for row in ccard_list:
+                result = self.build_ccard_dict(row)
+                result_list.append(result)
+        return jsonify(CreditCards=result_list)
 
     # ===================================================================================================================
     #                                           get credit cards by id
     # ===================================================================================================================
 
     def getCCardByID(self, cc_id):
-        ccards = self.ccard()
-        result = list(filter(lambda card: card['cc_id'] == cc_id, ccards))
-        if len(result) > 0:
-            return jsonify(Result=result)
-        return jsonify(Error="Credit Card Not Found"), 404
-
-    # ===================================================================================================================
-    #                                         get credit cards by name
-    # ===================================================================================================================
-
-    def getCCardByName(self, name):
-        ccard = self.ccard()
-        result = list(filter(lambda card: card['cc_name'] == name, ccard))
-        return result
-
-    # ===================================================================================================================
-    #                                      get credit cards by last name
-    # ===================================================================================================================
-
-    def getCCardByLastName(self, lastname):
-        ccard = self.ccard()
-        result = list(filter(lambda card: card['cc_lastName'] == lastname, ccard))
-        return result
-
-    # ===================================================================================================================
-    #                                  get credit cards by name and last name
-    # ===================================================================================================================
-
-    def getCCardByNameAndLastName(self, name, lastname):
-        ccard = self.ccard()
-        result = list(filter(lambda card: card['cc_name'] == name, ccard))
-        result2 = list(filter(lambda card: card['cc_lastName'] == lastname, result))
-        return result2
+        dao = CCardDAO()
+        row = dao.getSupplierById(cc_id)
+        if not row:
+            return jsonify(Error="Credit Card Not Found"), 404
+        else:
+            result = self.build_ccard_dict(row)
+        return jsonify(CreditCard=result)

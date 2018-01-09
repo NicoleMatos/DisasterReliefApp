@@ -49,11 +49,14 @@ class SupplierHandler:
 
     def getAllSuppliers(self):
         dao = SupplierDAO()
-        suppliers_list = dao.getAllSuppliers()
-        result_list = []
-        for row in suppliers_list:
-            result = self.build_supplier_dict(row)
-            result_list.append(result)
+        supplier_list = dao.getAllSuppliers()
+        if not supplier_list:
+            return jsonify(Error="Supplier Not Found"), 404
+        else:
+            result_list = []
+            for row in supplier_list:
+                result = self.build_supplier_dict(row)
+                result_list.append(result)
         return jsonify(Suppliers=result_list)
 
     # ===================================================================================================================
@@ -81,10 +84,13 @@ class SupplierHandler:
             supplier_list = dao.getSuppliersByLastname(lastname)
         else:
             return jsonify(Error="Malformed query string"), 400
-        result_list = []
-        for row in supplier_list:
-            result = self.build_supplier_dict(row)
-            result_list.append(result)
+        if not supplier_list:
+            return jsonify(Error="Supplier Not Found"), 404
+        else:
+            result_list = []
+            for row in supplier_list:
+                result = self.build_supplier_dict(row)
+                result_list.append(result)
         return jsonify(Supplier=result_list)
 
     # ===================================================================================================================
