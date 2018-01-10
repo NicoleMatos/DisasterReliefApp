@@ -89,6 +89,19 @@ class AnnouncementDAO:
             result.append(row)
         return result
 
+    # ===================================================================================================================
+    #                                           get Resources by Announcements
+    # ===================================================================================================================
+
+    def getResourcesByAnnouncements(self):
+        cursor = self.conn.cursor()
+        query = "select r_id, r_category, r_name, r_description from announcement natural inner join resource;"
+        cursor.execute(query,)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
 
 
 

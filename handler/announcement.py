@@ -15,6 +15,14 @@ class AnnouncementHandler:
             result['a_curr_qty'] = row[7]
             return result
 
+    def build_resource_dict(self, row):
+        result = {}
+        result['r_id'] = row[0]
+        result['r_category'] = row[1]
+        result['r_name'] = row[2]
+        result['r_description'] = row[3]
+        return result
+
 # ===================================================================================================================
 #                                        search for announcements
 # ===================================================================================================================
@@ -69,3 +77,20 @@ class AnnouncementHandler:
             else:
                 result = self.build_announcement_dict(row)
             return jsonify(Announcement=result)
+
+
+# ===================================================================================================================
+#                                           get Resources by announcements
+# ===================================================================================================================
+
+    def getResourcesByAnnouncements(self):
+        dao = AnnouncementDAO()
+        if not dao.getResourcesByAnnouncements():
+            return jsonify(Error='Resource Not Found.'), 404
+        else:
+            resource_list = dao.getResourcesByAnnouncements()
+            result_list = []
+            for row in resource_list:
+                result = self.build_resource_dict(row)
+                result_list.append(result)
+            return jsonify(Resources=result_list)

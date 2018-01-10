@@ -102,11 +102,9 @@ def getAllTransactions():
     else:
         return TransactionHandler().searchTransactions(request.args)
 
-
 @app.route('/transactions/<int:t_id>/')
 def getTransactionByID(t_id):
     return TransactionHandler().getTransactionByID(t_id)
-
 
 # =======================================================================================================================
 #                                           announcements routes
@@ -123,6 +121,10 @@ def getAllAnnouncements():
 @app.route('/announcements/<int:a_id>/')
 def getAnnouncementByID(a_id):
     return AnnouncementHandler().getAnnouncementByID(a_id)
+
+@app.route('/announcements/resources/')
+def getResourcestByAnnouncements():
+    return AnnouncementHandler().getResourcesByAnnouncements()
 
 
 # =======================================================================================================================
@@ -141,6 +143,13 @@ def getAllRequests():
 def getRequestByID(req_id):
     return RequestHandler().getRequestByID(req_id)
 
+@app.route('/requests/<int:req_id>/resources/')
+def getResourcestByRequestID(req_id):
+    return RequestHandler().getResourcestByRequestID(req_id)
+
+@app.route('/requests/resources/')
+def getResourcestByRequests():
+    return RequestHandler().getResourcestByRequests()
 
 # =======================================================================================================================
 #                                           resources routes
@@ -153,11 +162,21 @@ def getAllResources():
     else:
         return ResourceHandler().searchResources(request.args)
 
-
 @app.route('/resources/<int:r_id>/')
 def getResourceByID(r_id):
   return ResourceHandler().getResourceByID(r_id)
 
+@app.route('/resources/<category>/requests/')
+def getRequestsByResourceCategory(category):
+    return ResourceHandler().getRequestsByResourceCategory(category)
+
+@app.route('/resources/<category>/announcements/')
+def getAnnouncementsByResourceCategory(category):
+    return ResourceHandler().getAnnouncementsByResourceCategory(category)
+
+@app.route('/resources/<name>/suppliers/')
+def getSuppliersByResourceName(name):
+    return ResourceHandler().getSuppliersByResourceName(name)
 
 # =======================================================================================================================
 #                                        credit cards routes

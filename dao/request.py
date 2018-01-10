@@ -34,6 +34,13 @@ class RequestDAO:
         result = cursor.fetchone()
         return result
 
+    def getResourcesByRequestId(self, reqid):
+        cursor = self.conn.cursor()
+        query = "select r_id, r_category, r_name, r_description from request natural inner join resource where req_id = %s;"
+        cursor.execute(query, (reqid,))
+        result = cursor.fetchone()
+        return result
+
     # ===================================================================================================================
     #                                           get requests by things
     # ===================================================================================================================
@@ -60,6 +67,19 @@ class RequestDAO:
         cursor = self.conn.cursor()
         query = "select * from request where req_date = %s;"
         cursor.execute(query, (date,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
+    #                                           get Resources by Requests
+    # ===================================================================================================================
+
+    def getResourcesByRequests(self):
+        cursor = self.conn.cursor()
+        query = "select r_id, r_category, r_name, r_description from request natural inner join resource;"
+        cursor.execute(query,)
         result = []
         for row in cursor:
             result.append(row)

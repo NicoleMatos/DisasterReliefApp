@@ -11,26 +11,68 @@ class ResourceHandler:
         result['r_description'] = row[3]
         return result
 
+    def build_request_dict(self, row):
+        result = {}
+        result['req_id'] = row[0]
+        result['c_id'] = row[1]
+        result['r_id'] = row[2]
+        result['req_qty'] = row[3]
+        result['req_date'] = row[4]
+        return result
+
+    def build_announcement_dict(self, row):
+        result = {}
+        result['a_id'] = row[0]
+        result['s_id'] = row[1]
+        result['r_id'] = row[2]
+        result['a_price'] = row[3]
+        result['a_date'] = row[4]
+        result['a_sold_out'] = row[5]
+        result['a_initial_qty'] = row[6]
+        result['a_curr_qty'] = row[7]
+        return result
+
+    def build_supplier_dict(self, row):
+        result = {}
+        result['u_id'] = row[0]
+        result['s_id'] = row[1]
+        result['bank_account'] = row[2]
+        result['u_email'] = row[3]
+        result['u_password'] = row[4]
+        result['u_name'] = row[5]
+        result['u_lastname'] = row[6]
+        result['u_region'] = row[7]
+        result['u_age'] = row[8]
+        return result
+
     # ===================================================================================================================
     #                                        search for resources
     # ===================================================================================================================
 
     def searchResources(self, args):
+        region = args.get('region')
         category = args.get('category')
         name = args.get('name')
         dao = ResourceDAO()
-        if (len(args) == 2) and category and name:
-            resource_list = dao.getResourcesByCategoryAndName(category, name)
-        elif (len(args) == 1) and category:
-            resource_list = dao.getResourcesByCategory(category)
+        if (len(args) == 2) and region and name:
+            resource_list = dao.getResourcesByRegionAndName(region, name)
+        elif (len(args) == 2) and name and category:
+            resource_list = dao.getResourcesByCategoryAndName(name, category)
+        elif (len(args) == 1) and region:
+            resource_list = dao.getResourcesByRegion(region)
         elif (len(args) == 1) and name:
             resource_list = dao.getResourcesByName(name)
+        elif (len(args) == 1) and category:
+            resource_list = dao.getResourcesByCategory(category)
         else:
             return jsonify(Error="Malformed query string"), 400
-        result_list = []
-        for row in resource_list:
-            result = self.build_resource_dict(row)
-            result_list.append(result)
+        if not resource_list:
+            return jsonify(Error="Resource Not Found"), 404
+        else:
+            result_list = []
+            for row in resource_list:
+                result = self.build_resource_dict(row)
+                result_list.append(result)
         return jsonify(Resource=result_list)
 
     # ===================================================================================================================
@@ -58,3 +100,43 @@ class ResourceHandler:
         else:
             result = self.build_resource_dict(row)
         return jsonify(Resource=result)
+
+    # ===================================================================================================================
+    #                                           get things by resource name
+    # ===================================================================================================================
+
+    def getRequestsByResourceCategory(self, category):
+        dao = ResourceDAO()
+        if not dao.getRequestsByResourceCategory(category):
+            return jsonify(Error='Request Not Found.'), 404
+        else:
+            request_list = dao.getRequestsByResourceCategory(category)
+            result_list = []
+            for row in request_list:
+                result = self.build_request_dict(row)
+                result_list.append(result)
+            return jsonify(Requests=result_list)
+
+    def getAnnouncementsByResourceCategory(self, category):
+        dao = ResourceDAO()
+        if not dao.getAnnouncementsByResourceCategory(category):
+            return jsonify(Error='Announcement Not Found.'), 404
+        else:
+            announcement_list = dao.getAnnouncementsByResourceCategory(category)
+            result_list = []
+            for row in announcement_list:
+                result = self.build_announcement_dict(row)
+                result_list.append(result)
+            return jsonify(Announcement=result_list)
+
+    def getSuppliersByResourceName(self, name):
+        dao = ResourceDAO()
+        if not dao.getSupplierByResourceName(name):
+            return jsonify(Error='Supplier Not Found.'), 404
+        else:
+            supplier_list = dao.getSupplierByResourceName(name)
+            result_list = []
+            for row in supplier_list:
+                result = self.build_supplier_dict(row)
+                result_list.append(result)
+            return jsonify(Supplier=result_list)
