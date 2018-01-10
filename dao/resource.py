@@ -35,6 +35,40 @@ class ResourceDAO:
         return result
 
     # ===================================================================================================================
+    #                                         get things by resource name
+    # ===================================================================================================================
+
+    def getRequestsByResourceCategory(self, category):
+        cursor = self.conn.cursor()
+        query = "select req_id, c_id, r_id, req_qty, req_date from resource natural inner join request where " \
+                "r_category = %s order by r_name; "
+        cursor.execute(query, (category,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getAnnouncementsByResourceCategory(self, category):
+        cursor = self.conn.cursor()
+        query = "select a_id, s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty from resource " \
+                "natural inner join announcement where r_category = %s order by r_name; "
+        cursor.execute(query, (category,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getSupplierByResourceName(self, name):
+        cursor = self.conn.cursor()
+        query = "select distinct u_id, s_id, bank_account, u_email, u_password, u_name, u_lastname, u_region, " \
+                "u_age from resource natural inner join supplier natural inner join user_table where r_name = %s; "
+        cursor.execute(query, (name,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    # ===================================================================================================================
     #                                           get resources by things
     # ===================================================================================================================
 
@@ -60,6 +94,24 @@ class ResourceDAO:
         cursor = self.conn.cursor()
         query = "select * from resource where r_name = %s;"
         cursor.execute(query, (name,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourcesByRegion(self, region):
+        cursor = self.conn.cursor()
+        query = "select * from resource natural inner join user_table where u_region = %s;"
+        cursor.execute(query, (region,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getResourcesByRegionAndName(self, region, name):
+        cursor = self.conn.cursor()
+        query = "select * from resource natural inner join user_table where u_region = %s and r_name = %s;"
+        cursor.execute(query, (region, name,))
         result = []
         for row in cursor:
             result.append(row)

@@ -12,6 +12,14 @@ class RequestHandler:
         result['req_date'] = row[4]
         return result
 
+    def build_resource_dict(self, row):
+        result = {}
+        result['r_id'] = row[0]
+        result['r_category'] = row[1]
+        result['r_name'] = row[2]
+        result['r_description'] = row[3]
+        return result
+
     # ===================================================================================================================
     #                                          search for requests
     # ===================================================================================================================
@@ -64,3 +72,27 @@ class RequestHandler:
             result = self.build_request_dict(row)
         return jsonify(Request=result)
 
+    def getResourcestByRequestID(self, req_id):
+        dao = RequestDAO()
+        row = dao.getResourcesByRequestId(req_id)
+        if not row:
+            return jsonify(Error="Resource Not Found"), 404
+        else:
+            result = self.build_resource_dict(row)
+        return jsonify(Resource=result)
+
+    # ===================================================================================================================
+    #                                           get Resources by Requests
+    # ===================================================================================================================
+
+    def getResourcestByRequests(self):
+        dao = RequestDAO()
+        if not dao.getResourcesByRequests():
+            return jsonify(Error='Resource Not Found.'), 404
+        else:
+            resource_list = dao.getResourcesByRequests()
+            result_list = []
+            for row in resource_list:
+                result = self.build_resource_dict(row)
+                result_list.append(result)
+            return jsonify(Resources=result_list)
