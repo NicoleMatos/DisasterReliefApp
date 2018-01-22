@@ -87,11 +87,16 @@ class UserDAO:
             result.append(row)
         return result
 
-   # def insert(self, u_name, u_lastName, u_age, u_address, u_region, u_email, u_password):
-       # cursor = self.conn.cursor()
-       #query = "insert into users(u_name, u_lastName, u_age, u_address, u_region, u_email, u_password) values (%s,%s,%d,%s,%s,%s,%s) returning u_id;"
-       #cursor.execute(query,(u_name, u_lastName, u_age, u_address, u_region, u_email, u_password))
-       #u_id = cursor.fetchone()[0]
-       #self.conn.commit()
-       #return u_id
+    # ===================================================================================================================
+    #                                           insert user
+    # ===================================================================================================================
+
+    def insert(self, u_name, u_last_name, u_age, u_address, u_region, u_email, u_password):
+        cursor = self.conn.cursor()
+        query = "insert into users(u_name, u_lastName, u_age, u_address, u_region, u_email, u_password) values (%s," \
+                "%s,%d,%s,%s,%s,%s) returning u_id; "
+        cursor.execute(query,(u_name, u_last_name, u_age, u_address, u_region, u_email, u_password))
+        u_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return u_id
 

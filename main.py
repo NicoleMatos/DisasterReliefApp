@@ -7,6 +7,7 @@ from handler.administrator import AdministratorHandler
 from handler.request import RequestHandler
 from handler.resource import ResourceHandler
 from handler.ccard import CCardHandler
+from handler.address import AddressHandler
 from handler.user import UserHandler
 
 
@@ -194,6 +195,21 @@ def getAllCCards():
 def getCCardByID(cc_id):
     return CCardHandler().getCCardByID(cc_id)
 
+# =======================================================================================================================
+#                                        addresses routes
+# =======================================================================================================================
+
+@app.route('/addresses/')
+def getAllAddresses():
+    if not request.args:
+        return AddressHandler().getAllAddresses()
+    else:
+        return AddressHandler().searchAddresses(request.args)
+
+
+@app.route('/addresses/<int:cc_id>/')
+def getAddressByID(add_id):
+    return AddressHandler().getAddressByID(add_id)
 
 # =======================================================================================================================
 #                                           users routes

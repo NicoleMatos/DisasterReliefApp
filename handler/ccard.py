@@ -26,7 +26,7 @@ class CCardHandler:
         elif (len(args) == 1) and name:
             ccard_list = dao.getCCardsByName(name)
         elif (len(args) == 1) and lastname:
-            ccard_list = dao.getCCardsByLastname(lastname)
+            ccard_list = dao.getCCardsByLastName(lastname)
         else:
             return jsonify(Error="Malformed query string"), 400
         if not ccard_list:
@@ -60,7 +60,7 @@ class CCardHandler:
 
     def getCCardByID(self, cc_id):
         dao = CCardDAO()
-        row = dao.getSupplierById(cc_id)
+        row = dao.getCCardById(cc_id)
         if not row:
             return jsonify(Error="Credit Card Not Found"), 404
         else:

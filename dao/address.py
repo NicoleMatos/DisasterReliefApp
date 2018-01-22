@@ -2,7 +2,7 @@ from config.dbconfig import pg_config
 import psycopg2
 
 
-class CCardDAO:
+class AddressDAO:
     def __init__(self):
 
         connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'],
@@ -11,12 +11,12 @@ class CCardDAO:
         self.conn = psycopg2._connect(connection_url)
 
     # ===================================================================================================================
-    #                                           get all requests
+    #                                           get all addresses
     # ===================================================================================================================
 
-    def getAllCCards(self):
+    def getAllAddresses(self):
         cursor = self.conn.cursor()
-        query = "select * from credit_card;"
+        query = "select * from address;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -27,49 +27,61 @@ class CCardDAO:
     #                                           get things by id
     # ===================================================================================================================
 
-    def getCCardById(self, ccid):
+    def getAddressById(self, add_id):
         cursor = self.conn.cursor()
-        query = "select * from credit_card where cc_id = %s;"
-        cursor.execute(query, (ccid,))
+        query = "select * from address where add_id = %s;"
+        cursor.execute(query, (add_id,))
         result = cursor.fetchone()
         return result
 
     # ===================================================================================================================
-    #                                           get ccard by name
+    #                                           get addresses by city
     # ===================================================================================================================
 
-
-    def getCCardsByName(self, cc_name):
+    def getAddressesByCity(self, add_city):
         cursor = self.conn.cursor()
-        query = "select * from credit_card where cc_name = %s;"
-        cursor.execute(query, (cc_name,))
+        query = "select * from address where add_city = %s;"
+        cursor.execute(query, (add_city,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
     # ===================================================================================================================
-    #                                         get ccard by lastname
+    #                                         get addresses by country
     # ===================================================================================================================
 
-    def getCCardsByLastName(self, cc_lastname):
+    def getAddressesByCountry(self, add_country):
         cursor = self.conn.cursor()
-        query = "select * from credit_card where cc_lastname = %s;"
-        cursor.execute(query, (cc_lastname,))
+        query = "select * from address where add_country = %s;"
+        cursor.execute(query, (add_country,))
         result = []
         for row in cursor:
             result.append(row)
         return result
 
     # ===================================================================================================================
-    #                                 get credit card by name and lastname
+    #                                      get addresses by city and country
     # ===================================================================================================================
 
-    def getCCardsByNameAndLastName(self, cc_name, cc_lastname):
+    def getAddressesByCityAndCountry(self, add_city, add_country):
         cursor = self.conn.cursor()
-        query = "select * from credit_card where and cc_name = %s and cc_lastname = %s;"
-        cursor.execute(query, (cc_name, cc_lastname,))
+        query = "select * from address where and add_city = %s and add_country = %s;"
+        cursor.execute(query, (add_city, add_country,))
         result = []
         for row in cursor:
             result.append(row)
         return result
+
+    # ===================================================================================================================
+    #                                           insert address
+    # ===================================================================================================================
+
+    def insert(self, add_line1, add_line2, add_city, add_country, add_zip_code):
+        cursor = self.conn.cursor()
+        query = "insert into users(add_line1, add_line2, add_city, add_country, add_zip_code) values (%s,%s,%s,%s," \
+                "%s) returning add_id; "
+        cursor.execute(query, (add_line1, add_line2, add_city, add_country, add_zip_code))
+        add_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return add_id

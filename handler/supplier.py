@@ -1,6 +1,7 @@
 from flask import jsonify
+from dao.user import UserDAO
 from dao.supplier import SupplierDAO
-
+from dao.address import AddressDAO
 
 class SupplierHandler:
 
@@ -154,3 +155,36 @@ class SupplierHandler:
                 result = self.build_resource_dict(row)
                 result_list.append(result)
             return jsonify(Resources=result_list)
+
+    # ===================================================================================================================
+    #                                    get resources by supplier region
+    # ===================================================================================================================
+
+    def insertSupplier(self, form):
+        if form and len(form) == 3:
+            u_email = form['email']
+            u_password = form['password']
+            u_name = form['name']
+            u_last_name = form['lastname']
+            u_region = form['region']
+            u_age = form['age']
+            s_bank_account = form['bankaccount']
+            add_line1 = form['line1']
+            add_line2 = form['line2']
+            add_city = form['city']
+            add_country = form['country']
+            add_zip_code = form['zipcode']
+            if u_email and u_password and u_name and u_last_name and u_region and u_age and s_bank_account and add_line1 \
+                    and add_line2 and add_city and add_country and add_zip_code:
+                udao = UserDAO()
+                sdao = SupplierDAO()
+                adao = AddressDAO()
+                u_id = udao.insert(u_email, u_password, u_name, u_last_name, u_region, u_age)
+                s_id = sdao.insert(s_bank_account)
+                add_id = adao.insert(add_line1, add_line2, add_city, add_country, add_zip_code)
+                result = {"u_id": u_id, "s_id": s_id, "add_id": add_id}
+                return jsonify(Supplier=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
