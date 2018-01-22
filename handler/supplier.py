@@ -161,7 +161,7 @@ class SupplierHandler:
     # ===================================================================================================================
 
     def insertSupplier(self, form):
-        if form and len(form) == 3:
+        if form and len(form) == 12:
             u_email = form['email']
             u_password = form['password']
             u_name = form['name']
@@ -180,7 +180,7 @@ class SupplierHandler:
                 sdao = SupplierDAO()
                 adao = AddressDAO()
                 u_id = udao.insert(u_email, u_password, u_name, u_last_name, u_region, u_age)
-                s_id = sdao.insert(s_bank_account)
+                s_id = sdao.insert(u_id, s_bank_account)
                 add_id = adao.insert(add_line1, add_line2, add_city, add_country, add_zip_code)
                 result = {"u_id": u_id, "s_id": s_id, "add_id": add_id}
                 return jsonify(Supplier=result), 201

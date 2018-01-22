@@ -77,11 +77,11 @@ class AddressDAO:
     #                                           insert address
     # ===================================================================================================================
 
-    def insert(self, add_line1, add_line2, add_city, add_country, add_zip_code):
+    def insert(self, u_id, add_line1, add_line2, add_city, add_country, add_zip_code):
         cursor = self.conn.cursor()
-        query = "insert into users(add_line1, add_line2, add_city, add_country, add_zip_code) values (%s,%s,%s,%s," \
-                "%s) returning add_id; "
-        cursor.execute(query, (add_line1, add_line2, add_city, add_country, add_zip_code))
+        query = "insert into users(u_id, add_line1, add_line2, add_city, add_country, add_zip_code) values (%s,%s,%s," \
+                "%s, %s, %s) returning add_id; "
+        cursor.execute(query, (u_id, add_line1, add_line2, add_city, add_country, add_zip_code))
         add_id = cursor.fetchone()[0]
         self.conn.commit()
         return add_id
