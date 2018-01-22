@@ -136,7 +136,8 @@ class SupplierDAO:
 
     def getResourcesByRegion(self, region):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_category, r_name, r_description from supplier natural inner join user_table natural inner join announcement natural inner join resource where u_region = %s;'
+        query = 'select r_id, r_category, r_name, r_description from supplier natural inner join user_table natural ' \
+                'inner join announcement natural inner join resource where u_region = %s; '
         cursor.execute(query, (region,))
         result = []
         for row in cursor:
@@ -147,10 +148,10 @@ class SupplierDAO:
     #                                               insert supplier
     # ===================================================================================================================
 
-    def insert(self, sname, sregion, sphone):
+    def insert(self, s_bank_account):
         cursor = self.conn.cursor()
-        query = "insert into supplier(s_name, s_region, s_phone) values (%s, %s, %s) returning s_id;"
-        cursor.execute(query, (sname, sregion, sphone))
+        query = "insert into supplier(s_bank_account) values (%s) returning sid;"
+        cursor.execute(query, s_bank_account)
         sid = cursor.fetchone()[0]
         self.conn.commit()
         return sid
