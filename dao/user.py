@@ -93,9 +93,9 @@ class UserDAO:
 
     def insert(self, u_name, u_last_name, u_age, u_address, u_region, u_email, u_password):
         cursor = self.conn.cursor()
-        query = "insert into users(u_name, u_lastName, u_age, u_address, u_region, u_email, u_password) values (%s," \
-                "%s,%d,%s,%s,%s,%s) returning u_id; "
-        cursor.execute(query,(u_name, u_last_name, u_age, u_address, u_region, u_email, u_password))
+        query = "insert into user_table(u_email, u_password, u_name, u_lastname, u_region, u_age) values (%s," \
+                "%s,%s,%s,%s,%d) returning u_id; "
+        cursor.execute(query, (u_name, u_last_name, u_age, u_address, u_region, u_email, u_password))
         u_id = cursor.fetchone()[0]
         self.conn.commit()
         return u_id
