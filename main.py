@@ -27,16 +27,26 @@ def home():
 #                                           suppliers routes
 # =======================================================================================================================
 
-@app.route('/suppliers/')
+@app.route('/suppliers/', methods=['GET', 'POST'])
 def getAllSuppliers():
-    if not request.args:
-        return SupplierHandler().getAllSuppliers()
+    if request.method == 'POST':
+        return SupplierHandler().insertSupplier(request.form)
     else:
-        return SupplierHandler().searchSuppliers(request.args)
+        if not request.args:
+            return SupplierHandler().getAllSuppliers()
+        else:
+            return SupplierHandler().searchSuppliers(request.args)
 
-@app.route('/suppliers/<int:s_id>/')
+@app.route('/suppliers/<int:s_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getSupplierByID(s_id):
-    return SupplierHandler().getSupplierByID(s_id)
+    if request.method == 'GET':
+        return SupplierHandler().getSupplierByID(s_id)
+    elif request.method == 'PUT':
+        pass
+    elif request.method == 'DELETE':
+        pass
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 @app.route('/suppliers/<int:s_id>/announcements/')
