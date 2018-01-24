@@ -148,10 +148,11 @@ class SupplierDAO:
     #                                               insert supplier
     # ===================================================================================================================
 
-    def insert(self, u_id, s_bank_account):
+    def insert(self, u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account):
         cursor = self.conn.cursor()
-        query = "insert into supplier(u_id, s_bank_account) values (%s, %s) returning sid;"
-        cursor.execute(query, u_id, s_bank_account)
-        sid = cursor.fetchone()[0]
+        query = "insert into supplier (u_email, u_password, u_name, u_lastname, u_region, u_age, bank_account) values " \
+                "(%s, %s, %s, %s, %s, %s, %s) returning s_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account))
+        s_id = cursor.fetchone()[0];
         self.conn.commit()
-        return sid
+        return s_id
