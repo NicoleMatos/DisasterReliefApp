@@ -42,9 +42,9 @@ def getSupplierByID(s_id):
     if request.method == 'GET':
         return SupplierHandler().getSupplierByID(s_id)
     elif request.method == 'PUT':
-        pass
+        return SupplierHandler().putSupplierByID(request.form, s_id)
     elif request.method == 'DELETE':
-        pass
+        return SupplierHandler().deleteSupplierByID(s_id)
     else:
         return jsonify(Error="Method not allowed"), 405
 
