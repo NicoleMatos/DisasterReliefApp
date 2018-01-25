@@ -5,16 +5,16 @@ from dao.client import ClientDAO
 # Class that handles the Client
 class ClientHandler:
 
-    def build_client_dict(self,row):
+    def build_client_dict(self, row):
         result = {}
         result['u_id'] = row[0]
-        result['c_id'] = row[7]
         result['u_email'] = row[1]
         result['u_password'] = row[2]
         result['u_name'] = row[3]
         result['u_lastname'] = row[4]
         result['u_region'] = row[5]
         result['u_age'] = row[6]
+        result['c_id'] = row[7]
         return result
 
     def build_transaction_dict(self, row):
@@ -50,14 +50,14 @@ class ClientHandler:
     def build_supplier_dict(self, row):
         result = {}
         result['u_id'] = row[0]
-        result['s_id'] = row[7]
-        result['bank_account'] = row[8]
         result['u_email'] = row[1]
         result['u_password'] = row[2]
         result['u_name'] = row[3]
         result['u_lastname'] = row[4]
         result['u_region'] = row[5]
         result['u_age'] = row[6]
+        result['s_id'] = row[7]
+        result['s_bank_account'] = row[8]
         return result
 
     # ===================================================================================================================
@@ -219,6 +219,79 @@ class ClientHandler:
             client = self.build_client_dict(row)
 
         return jsonify(Client=client)
+
+# ===================================================================================================================
+#                                          insert client
+# ===================================================================================================================
+
+    def insertClient(self, form):
+        if form and len(form) == 6:
+            u_email = form['u_email']
+            u_password = form['u_password']
+            u_name = form['u_name']
+            u_last_name = form['u_last_name']
+            u_region = form['u_region']
+            u_age = form['u_age']
+            if u_email and u_password and u_name and u_last_name and u_region and u_age:
+                dao = ClientDAO()
+                c_id = dao.insert(u_email, u_password, u_name, u_last_name, u_region, u_age)
+                result = {}
+                result["c_id"] = c_id
+                result["u_email"] = u_email
+                result["u_password"] = u_password
+                result["u_name"] = u_name
+                result["u_last_name"] = u_last_name
+                result["u_region"] = u_region
+                result["u_age"] = u_age
+
+                return jsonify(Client=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+    # ===================================================================================================================
+    #                                          put client
+    # ===================================================================================================================
+
+    def putClientByID(self, form, c_id):
+        if form and len(form) == 6:
+            u_email = form['u_email']
+            u_password = form['u_password']
+            u_name = form['u_name']
+            u_last_name = form['u_last_name']
+            u_region = form['u_region']
+            u_age = form['u_age']
+            if u_email and u_password and u_name and u_last_name and u_region and u_age and c_id:
+                dao = ClientDAO()
+                c_id = dao.put(u_email, u_password, u_name, u_last_name, u_region, u_age, c_id)
+                result = {}
+                result["c_id"] = c_id
+                result["u_email"] = u_email
+                result["u_password"] = u_password
+                result["u_name"] = u_name
+                result["u_last_name"] = u_last_name
+                result["u_region"] = u_region
+                result["u_age"] = u_age
+
+                return jsonify(Client=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+    # ===================================================================================================================
+    #                                          delete client
+    # ===================================================================================================================
+
+    def deleteClientByID(self, c_id):
+        dao = ClientDAO()
+        if not dao.getClientById(c_id):
+            return jsonify(Error="Client not found."), 404
+        else:
+            dao.delete(c_id)
+            return jsonify(DeleteStatus="OK"), 200
+
 
 
 

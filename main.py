@@ -73,18 +73,28 @@ def getResourcesByRegion(region):
 #                                           clients routes
 # =======================================================================================================================
 
-@app.route('/clients/')
+
+@app.route('/clients/', methods=['GET', 'POST'])
 def getAllClients():
-    if not request.args:
-        return ClientHandler().getAllClients()
+    if request.method == 'POST':
+        return ClientHandler().insertClient(request.form)
     else:
-        return ClientHandler().searchClients(request.args)
+        if not request.args:
+            return ClientHandler().getAllClients()
+        else:
+            return ClientHandler().searchClients(request.args)
 
 
-@app.route('/clients/<int:c_id>/')
+@app.route('/clients/<int:c_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getClientByID(c_id):
-    return ClientHandler().getClientByID(c_id)
-
+    if request.method == 'GET':
+        return ClientHandler().getClientByID(c_id)
+    elif request.method == 'PUT':
+        return ClientHandler().putClientByID(request.form, c_id)
+    elif request.method == 'DELETE':
+        return ClientHandler().deleteClientByID(c_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 @app.route('/clients/<int:c_id>/requests/')
 def getRequestsByClientID(c_id):
