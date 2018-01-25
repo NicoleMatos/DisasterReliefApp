@@ -22,7 +22,7 @@
     );
 
     create table administrator(                -- administers the system (inherited from users)
-    ad_id serial primary key,         -- administrator id
+    ad_id serial primary key         -- administrator id
     ) INHERITS (user_table);
 
     create table supplier(                -- supplies by announcements (inherited from users)

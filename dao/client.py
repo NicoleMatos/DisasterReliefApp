@@ -17,7 +17,7 @@ class ClientDAO:
 
     def getAllClients(self):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client;"
+        query = "select * from client;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -31,7 +31,7 @@ class ClientDAO:
 
     def getClientById(self,c_id):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where c_id = %s;"
+        query = "select * from client where c_id = %s;"
         cursor.execute(query,(c_id,))
         result = cursor.fetchone()
         return result
@@ -65,7 +65,7 @@ class ClientDAO:
 
     def getSuppliersByClientID(self, c_id):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join supplier where s_id IN (select s_id from transaction where c_id = %s);"
+        query = "select * from supplier where s_id IN (select s_id from transaction where c_id = %s);"
         cursor.execute(query, (c_id,))
         result = []
         for row in cursor:
@@ -78,7 +78,7 @@ class ClientDAO:
 
     def getClientByName(self,u_name):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_name = %s;"
+        query = "select * from client where u_name = %s;"
         cursor.execute(query,(u_name,))
         result = []
         for row in cursor:
@@ -91,7 +91,7 @@ class ClientDAO:
 
     def getClientByLastName(self,u_lastname):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_lastname = %s;"
+        query = "select * from client where u_lastname = %s;"
         cursor.execute(query, (u_lastname,))
         result = []
         for row in cursor:
@@ -105,7 +105,7 @@ class ClientDAO:
 
     def getClientByNameAndLastName(self,u_name,u_lastname):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_name = %s and u_lastname = %s;"
+        query = "select * from client where u_name = %s and u_lastname = %s;"
         cursor.execute(query,(u_name,u_lastname))
         result = []
         for row in cursor:
@@ -119,7 +119,7 @@ class ClientDAO:
 
     def getClientByRegion(self,region):
         cursor = self.conn.cursor()
-        query = "select * from user_table natural inner join client where u_region = %s;"
+        query = "select * from client where u_region = %s;"
         cursor.execute(query,(region,))
         result = []
         for row in cursor:
@@ -132,7 +132,7 @@ class ClientDAO:
 
     def getClientByRegionAndNameAndLastname(self, region, name, lastname):
         cursor = self.conn.cursor()
-        query = "select * from client natural inner join user_table where u_region = %s and u_name = %s and u_lastname = %s;"
+        query = "select * from client where u_region = %s and u_name = %s and u_lastname = %s;"
         cursor.execute(query, (region, name, lastname))
         result = []
         for row in cursor:
@@ -145,7 +145,7 @@ class ClientDAO:
 
     def getClientByRegionAndName(self, region, name):
         cursor = self.conn.cursor()
-        query = "select * from client natural inner join user_table where u_region = %s and u_name = %s;"
+        query = "select * from client where u_region = %s and u_name = %s;"
         cursor.execute(query, (region, name))
         result = []
         for row in cursor:
@@ -158,11 +158,48 @@ class ClientDAO:
 
     def getClientByRegionAndLastname(self, region, lastname):
         cursor = self.conn.cursor()
-        query = "select * from client natural inner join user_table where u_region = %s and u_lastname = %s;"
+        query = "select * from client where u_region = %s and u_lastname = %s;"
         cursor.execute(query, (region, lastname))
         result = []
         for row in cursor:
             result.append(row)
         return result
+
+    # ===================================================================================================================
+    #                                               insert client
+    # ===================================================================================================================
+
+    def insert(self, u_email, u_password, u_name, u_last_name, u_region, u_age):
+        cursor = self.conn.cursor()
+        query = "insert into client (u_email, u_password, u_name, u_lastname, u_region, u_age) values " \
+                "(%s, %s, %s, %s, %s, %s) returning c_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age))
+        c_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return c_id
+
+    # ===================================================================================================================
+    #                                               put supplier
+    # ===================================================================================================================
+
+    def put(self, u_email, u_password, u_name, u_last_name, u_region, u_age, c_id):
+        cursor = self.conn.cursor()
+        query = "update client set u_email=%s, u_password=%s, u_name=%s, u_lastname=%s, u_region=%s, u_age=%s, " \
+                "where c_id=%s returning c_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, c_id))
+        c_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return c_id
+
+    # ===================================================================================================================
+    #                                               delete supplier
+    # ===================================================================================================================
+
+    def delete(self, c_id):
+        cursor = self.conn.cursor()
+        query = "delete from client where c_id=%s; "
+        cursor.execute(query, (c_id,))
+        self.conn.commit()
+        return c_id
 
 
