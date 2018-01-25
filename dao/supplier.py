@@ -16,7 +16,7 @@ class SupplierDAO:
 
     def getAllSuppliers(self):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table;"
+        query = "select * from supplier;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -29,7 +29,7 @@ class SupplierDAO:
 
     def getSuppliersByRegionAndNameAndLastname(self, region, name, lastname):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_region = %s and u_name = %s and u_lastname = %s;"
+        query = "select * from supplier where u_region = %s and u_name = %s and u_lastname = %s;"
         cursor.execute(query, (region, name, lastname))
         result = []
         for row in cursor:
@@ -38,7 +38,7 @@ class SupplierDAO:
 
     def getSuppliersByRegionAndName(self, region, name):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_region = %s and u_name = %s;"
+        query = "select * from supplier where u_region = %s and u_name = %s;"
         cursor.execute(query, (region, name))
         result = []
         for row in cursor:
@@ -47,7 +47,7 @@ class SupplierDAO:
 
     def getSuppliersByRegionAndLastname(self, region, lastname):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_region = %s and u_lastname = %s;"
+        query = "select * from supplier where u_region = %s and u_lastname = %s;"
         cursor.execute(query, (region, lastname))
         result = []
         for row in cursor:
@@ -56,7 +56,7 @@ class SupplierDAO:
 
     def getSuppliersByNameAndLastname(self, name, lastname):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_name = %s and u_lastname = %s;"
+        query = "select * from supplier where u_name = %s and u_lastname = %s;"
         cursor.execute(query, (name, lastname))
         result = []
         for row in cursor:
@@ -65,7 +65,7 @@ class SupplierDAO:
 
     def getSuppliersByRegion(self, region):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_region = %s;"
+        query = "select * from supplier where u_region = %s;"
         cursor.execute(query, (region,))
         result = []
         for row in cursor:
@@ -74,7 +74,7 @@ class SupplierDAO:
 
     def getSuppliersByName(self, name):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_name = %s;"
+        query = "select * from supplier where u_name = %s;"
         cursor.execute(query, (name,))
         result = []
         for row in cursor:
@@ -83,7 +83,7 @@ class SupplierDAO:
 
     def getSuppliersByLastname(self, lastname):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where u_lastname = %s;"
+        query = "select * from supplier where u_lastname = %s;"
         cursor.execute(query, (lastname,))
         result = []
         for row in cursor:
@@ -96,7 +96,7 @@ class SupplierDAO:
 
     def getSupplierById(self, sid):
         cursor = self.conn.cursor()
-        query = "select * from supplier natural inner join user_table where s_id = %s;"
+        query = "select * from supplier where s_id = %s;"
         cursor.execute(query, (sid,))
         result = cursor.fetchone()
         return result
@@ -136,8 +136,8 @@ class SupplierDAO:
 
     def getResourcesByRegion(self, region):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_category, r_name, r_description from supplier natural inner join user_table natural ' \
-                'inner join announcement natural inner join resource where u_region = %s; '
+        query = 'select r_id, r_category, r_name, r_description from supplier natural inner join announcement natural ' \
+                'inner join resource where u_region = %s; '
         cursor.execute(query, (region,))
         result = []
         for row in cursor:
@@ -150,9 +150,33 @@ class SupplierDAO:
 
     def insert(self, u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account):
         cursor = self.conn.cursor()
-        query = "insert into supplier (u_email, u_password, u_name, u_lastname, u_region, u_age, bank_account) values " \
+        query = "insert into supplier (u_email, u_password, u_name, u_lastname, u_region, u_age, s_bank_account) values " \
                 "(%s, %s, %s, %s, %s, %s, %s) returning s_id; "
         cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account))
-        s_id = cursor.fetchone()[0];
+        s_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return s_id
+
+    # ===================================================================================================================
+    #                                               put supplier
+    # ===================================================================================================================
+
+    def put(self, u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account, s_id):
+        cursor = self.conn.cursor()
+        query = "update supplier set u_email=%s, u_password=%s, u_name=%s, u_lastname=%s, u_region=%s, u_age=%s, " \
+                "s_bank_account=%s where s_id=%s returning s_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, s_bank_account, s_id))
+        s_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return s_id
+
+    # ===================================================================================================================
+    #                                               delete supplier
+    # ===================================================================================================================
+
+    def delete(self, s_id):
+        cursor = self.conn.cursor()
+        query = "delete from supplier where s_id=%s; "
+        cursor.execute(query, (s_id,))
         self.conn.commit()
         return s_id

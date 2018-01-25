@@ -18,7 +18,7 @@ class UserDAO:
 
     def getAllUsers(self):
         cursor = self.conn.cursor()
-        query = "select * from users;"
+        query = "select * from user_table;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -31,7 +31,7 @@ class UserDAO:
 
     def getUserById(self,u_id):
         cursor = self.conn.cursor()
-        query = "select * from users where u_id = %s;"
+        query = "select * from user_table where u_id = %s;"
         cursor.execute(query,(u_id,))
         result = cursor.fetchone()
         return result
@@ -42,7 +42,7 @@ class UserDAO:
 
     def getUserByName(self,u_name):
         cursor = self.conn.cursor()
-        query = "select * from users where u_name = %s;"
+        query = "select * from user_table where u_name = %s;"
         cursor.execute(query,(u_name,))
         result = []
         for row in cursor:
@@ -55,7 +55,7 @@ class UserDAO:
 
     def getUserByLastName(self,u_lastName):
         cursor = self.conn.cursor()
-        query = "select * from users where u_lastName = %s;"
+        query = "select * from user_table where u_lastName = %s;"
         cursor.execute(query,(u_lastName,))
         result = []
         for row in cursor:
@@ -80,7 +80,7 @@ class UserDAO:
     # ===================================================================================================================
     def getUserByRegion(self,u_region):
         cursor = self.conn.cursor()
-        query = "select * from users where u_region = %s;"
+        query = "select * from user_table where u_region = %s;"
         cursor.execute(query,(u_region,))
         result = []
         for row in cursor:
