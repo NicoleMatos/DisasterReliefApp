@@ -66,3 +66,75 @@ class CCardHandler:
         else:
             result = self.build_ccard_dict(row)
         return jsonify(CreditCard=result)
+
+
+    # ===================================================================================================================
+    #                                          insert credit card
+    # ===================================================================================================================
+
+    def insertCCard(self, form):
+        if form and len(form) == 5:
+            c_id = form['c_id']
+            cc_name = form['cc_name']
+            cc_lastname = form['cc_lastname']
+            cc_number = form['cc_number']
+            cc_exp_date = form['cc_exp_date']
+            if cc_name and cc_lastname and cc_number and cc_exp_date and c_id:
+                dao = CCardDAO()
+                cc_id = dao.insert(c_id, cc_name, cc_lastname, cc_number, cc_exp_date)
+                result = {}
+                result["cc_id"]= cc_id
+                result["c_id"] = c_id
+                result["cc_name"] = cc_name
+                result["cc_lastname"] = cc_lastname
+                result["cc_number"] = cc_number
+                result["cc_exp_date"] = cc_exp_date
+
+                return jsonify(CreditCard=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+
+    # ===================================================================================================================
+    #                                          update credit card
+    # ===================================================================================================================
+
+    def putCCardByClientID(self, form, cc_id):
+        if form and len(form) == 5:
+            c_id = form['c_id']
+            cc_name = form['cc_name']
+            cc_lastname = form['cc_lastname']
+            cc_number = form['cc_number']
+            cc_exp_date = form['cc_exp_date']
+
+            if cc_name and cc_lastname and cc_number and cc_exp_date and cc_id and c_id:
+                dao = CCardDAO()
+                cc_id = dao.put(c_id, cc_name, cc_lastname, cc_number, cc_exp_date, cc_id)
+                result = {}
+                result["cc_id"]= cc_id
+                result["c_id"] = c_id
+                result["cc_name"] = cc_name
+                result["u_password"] = cc_lastname
+                result["u_name"] = cc_number
+                result["u_last_name"] = cc_exp_date
+
+                return jsonify(CreditCard=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+
+    # ===================================================================================================================
+    #                                          delete credit card
+    # ===================================================================================================================
+
+    def deleteCCardByID(self, cc_id):
+        dao = CCardDAO()
+        if not dao.getCCardById(cc_id):
+            return jsonify(Error="Credit Card not found."), 404
+        else:
+            dao.delete(cc_id)
+            return jsonify(DeleteStatus="OK"), 200

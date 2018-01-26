@@ -179,12 +179,12 @@ class ClientDAO:
         return c_id
 
     # ===================================================================================================================
-    #                                               put supplier
+    #                                               put client
     # ===================================================================================================================
 
     def put(self, u_email, u_password, u_name, u_last_name, u_region, u_age, c_id):
         cursor = self.conn.cursor()
-        query = "update client set u_email=%s, u_password=%s, u_name=%s, u_lastname=%s, u_region=%s, u_age=%s, " \
+        query = "update client set u_email=%s, u_password=%s, u_name=%s, u_lastname=%s, u_region=%s, u_age=%s " \
                 "where c_id=%s returning c_id; "
         cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, c_id))
         c_id = cursor.fetchone()[0]
@@ -192,7 +192,7 @@ class ClientDAO:
         return c_id
 
     # ===================================================================================================================
-    #                                               delete supplier
+    #                                               delete client
     # ===================================================================================================================
 
     def delete(self, c_id):
