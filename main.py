@@ -217,18 +217,28 @@ def getSuppliersByResourceName(name):
 # =======================================================================================================================
 #                                        credit cards routes
 # =======================================================================================================================
-
-@app.route('/creditcards/')
+@app.route('/creditcards/', methods=['GET', 'POST'])
 def getAllCCards():
-    if not request.args:
-        return CCardHandler().getAllCCards()
+    if request.method == 'POST':
+        return CCardHandler().insertCCard(request.form)
     else:
-        return CCardHandler().searchCCards(request.args)
+        if not request.args:
+            return CCardHandler().getAllCCards()
+        else:
+            return CCardHandler().searchCCards(request.args)
 
 
-@app.route('/ccards/<int:cc_id>/')
+@app.route('/creditcards/<int:cc_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getCCardByID(cc_id):
-    return CCardHandler().getCCardByID(cc_id)
+    if request.method == 'GET':
+        return CCardHandler().getCCardByID(cc_id)
+    elif request.method == 'PUT':
+        return CCardHandler().putCCardByClientID(request.form, cc_id)
+    elif request.method == 'DELETE':
+        return CCardHandler().deleteCCardByID(cc_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
+
 
 
 # =======================================================================================================================
@@ -269,17 +279,27 @@ def getUserByID(u_id):
 #                                           administrators routes
 # =======================================================================================================================
 
-@app.route('/administrators/')
+@app.route('/administrators/', methods=['GET', 'POST'])
 def getAllAdministrators():
-    if not request.args:
-        return AdministratorHandler().getAllAdministrators()
+    if request.method == 'POST':
+        return AdministratorHandler().insertAdministrator(request.form)
     else:
-        return AdministratorHandler().searchAdministrator(request.args)
+        if not request.args:
+            return AdministratorHandler().getAllAdministrators()
+        else:
+            return AdministratorHandler().searchAdministrator(request.args)
 
 
-@app.route('/administrators/<int:a_id>/')
-def getAdministratorByID(a_id):
-    return AdministratorHandler().getAdministratorByID(a_id)
+@app.route('/administrators/<int:ad_id>/', methods=['GET', 'PUT', 'DELETE'])
+def getAdministratorByID(ad_id):
+    if request.method == 'GET':
+        return AdministratorHandler().getAdministratorByID(ad_id)
+    elif request.method == 'PUT':
+        return AdministratorHandler().putAdministratorByID(request.form, ad_id)
+    elif request.method == 'DELETE':
+        return AdministratorHandler().deleteAdministratorByID(ad_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 # =======================================================================================================================

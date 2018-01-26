@@ -76,3 +76,41 @@ class AdministratorDAO:
         return result
 
 
+    # ===================================================================================================================
+    #                                               insert administrator
+    # ===================================================================================================================
+
+    def insert(self, u_email, u_password, u_name, u_last_name, u_region, u_age):
+        cursor = self.conn.cursor()
+        query = "insert into administrator (u_email, u_password, u_name, u_lastname, u_region, u_age) values " \
+                "(%s, %s, %s, %s, %s, %s) returning ad_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age))
+        ad_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return ad_id
+
+    # ===================================================================================================================
+    #                                               put administrator
+    # ===================================================================================================================
+
+    def put(self, u_email, u_password, u_name, u_last_name, u_region, u_age, ad_id):
+        cursor = self.conn.cursor()
+        query = "update administrator set u_email=%s, u_password=%s, u_name=%s, u_lastname=%s, u_region=%s, u_age=%s, " \
+                "where ad_id=%s returning ad_id; "
+        cursor.execute(query, (u_email, u_password, u_name, u_last_name, u_region, u_age, ad_id))
+        ad_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return ad_id
+
+    # ===================================================================================================================
+    #                                               delete administrator
+    # ===================================================================================================================
+
+    def delete(self, ad_id):
+        cursor = self.conn.cursor()
+        query = "delete from administrator where ad_id=%s;"
+        cursor.execute(query, (ad_id,))
+        self.conn.commit()
+        return ad_id
+
+
