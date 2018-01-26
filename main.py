@@ -186,17 +186,25 @@ def getResourcestByRequests():
 #                                           resources routes
 # =======================================================================================================================
 
-@app.route('/resources/')
+@app.route('/resources/', methods=['GET', 'POST'])
 def getAllResources():
-    if not request.args:
-        return ResourceHandler().getAllResources()
+    if request.method == 'POST':
+        return ResourceHandler().insertResource(request.form)
     else:
-        return ResourceHandler().searchResources(request.args)
+        if not request.args:
+            return ResourceHandler().getAllResources()
+        else:
+            return ResourceHandler().searchResources(request.args)
 
 
-@app.route('/resources/<int:r_id>/')
+@app.route('/resources/<int:r_id>/', methods=['GET', 'PUT'])
 def getResourceByID(r_id):
-    return ResourceHandler().getResourceByID(r_id)
+    if request.method == 'GET':
+        return ResourceHandler().getResourceByID(r_id)
+    elif request.method == 'PUT':
+        return ResourceHandler().putResourceById(request.form, r_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 @app.route('/resources/<category>/requests/')

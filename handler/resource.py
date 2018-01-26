@@ -35,14 +35,14 @@ class ResourceHandler:
     def build_supplier_dict(self, row):
         result = {}
         result['u_id'] = row[0]
-        result['s_id'] = row[1]
-        result['bank_account'] = row[2]
-        result['u_email'] = row[3]
-        result['u_password'] = row[4]
-        result['u_name'] = row[5]
-        result['u_lastname'] = row[6]
-        result['u_region'] = row[7]
-        result['u_age'] = row[8]
+        result['u_email'] = row[1]
+        result['u_password'] = row[2]
+        result['u_name'] = row[3]
+        result['u_lastname'] = row[4]
+        result['u_region'] = row[5]
+        result['u_age'] = row[6]
+        result['s_id'] = row[7]
+        result['s_bank_account'] = row[8]
         return result
 
     # ===================================================================================================================
@@ -140,3 +140,58 @@ class ResourceHandler:
                 result = self.build_supplier_dict(row)
                 result_list.append(result)
             return jsonify(Supplier=result_list)
+
+
+
+    # ===================================================================================================================
+    #                                          insert resource
+    # ===================================================================================================================
+
+    def insertResource(self, form):
+        if form and len(form) == 3:
+            r_category = form['r_category']
+            r_name = form['r_name']
+            r_description = form['r_description']
+
+            if r_category and r_name and r_description:
+                dao = ResourceDAO()
+                r_id = dao.insert(r_category, r_name, r_description)
+                result = {}
+                result['r_id'] = r_id
+                result['r_category'] = r_category
+                result['r_name'] = r_name
+                result['r_description'] = r_description
+
+                return jsonify(Resource=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+
+    # ===================================================================================================================
+    #                                          update resource
+    # ===================================================================================================================
+
+    def putResourceById(self, form, r_id):
+        if form and len(form) == 3:
+            r_category = form['r_category']
+            r_name = form['r_name']
+            r_description = form['r_description']
+
+            if r_category and r_name and r_description and r_id:
+                dao = ResourceDAO()
+                r_id = dao.put(r_category, r_name, r_description,r_id)
+                result = {}
+                result["r_id"]= r_id
+                result['r_category'] = r_category
+                result['r_name'] = r_name
+                result['r_description'] = r_description
+
+                return jsonify(Resource=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+

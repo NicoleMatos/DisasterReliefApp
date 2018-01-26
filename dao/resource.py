@@ -118,3 +118,32 @@ class ResourceDAO:
         return result
 
 
+
+    # ===================================================================================================================
+    #                                               insert resource
+    # ===================================================================================================================
+
+    def insert(self,r_category, r_name, r_description):
+        cursor = self.conn.cursor()
+        query = "insert into resource (r_category, r_name, r_description) values " \
+                "(%s, %s, %s) returning r_id; "
+        cursor.execute(query, (r_category, r_name, r_description))
+        r_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return r_id
+
+
+    # ===================================================================================================================
+    #                                               update resource
+    # ===================================================================================================================
+
+    def put(self, r_category, r_name, r_description,r_id):
+        cursor = self.conn.cursor()
+        query = "update resource set r_category=%s, r_name=%s, r_description=%s" \
+                "where r_id=%s returning r_id;"
+        cursor.execute(query, (r_category, r_name, r_description,r_id))
+        r_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return r_id
+
+
