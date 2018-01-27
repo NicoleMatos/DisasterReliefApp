@@ -73,7 +73,7 @@ class AddressHandler:
     #                                          insert credit card
     # ===================================================================================================================
 
-    def insertAddress(self, form,):
+    def insertAddress(self, form):
         if form and len(form) == 6:
             c_id = form['c_id']
             add_line1 = form['add_line1']
@@ -83,15 +83,15 @@ class AddressHandler:
             add_zip_code = form['add_zip_code']
             if c_id and add_line1 and add_line2 and add_city and add_country and add_zip_code:
                 dao = AddressDAO()
-                add_id = dao.insert(c_id,add_line1, add_line2, add_city, add_country,add_zip_code)
+                add_id = dao.insert(c_id, add_line1, add_line2, add_city, add_country, add_zip_code)
                 result = {}
-                result['add_id'] = add_id
-                result['c_id'] = c_id
-                result['add_line1'] = add_line1
-                result['add_line2'] = add_line2
-                result['add_city'] = add_city
-                result['add_country'] = add_country
-                result['add_zip_code'] = add_zip_code
+                result["add_id"] = add_id
+                result["c_id"] = c_id
+                result["add_line1"] = add_line1
+                result["add_line2"] = add_line2
+                result["add_city"] = add_city
+                result["add_country"] = add_country
+                result["add_zip_code"] = add_zip_code
 
                 return jsonify(Address=result), 201
             else:
@@ -105,18 +105,20 @@ class AddressHandler:
     # ===================================================================================================================
 
     def putAddressID(self, form, add_id):
-        if form and len(form) == 5:
+        if form and len(form) == 6:
+            c_id = form['c_id']
             add_line1 = form['add_line1']
             add_line2 = form['add_line2']
             add_city = form['add_city']
             add_country = form['add_country']
             add_zip_code = form['add_zip_code']
 
-            if add_line1 and add_line2 and add_city and add_country and add_id and add_zip_code:
+            if c_id and add_line1 and add_line2 and add_city and add_country and add_id and add_zip_code:
                 dao = AddressDAO()
-                add_id = dao.put(add_line1, add_line2, add_city, add_country, add_zip_code, add_id)
+                add_id = dao.put(c_id, add_line1, add_line2, add_city, add_country, add_zip_code, add_id)
                 result = {}
                 result['add_id'] = add_id
+                result['c_id'] = c_id
                 result['add_line1'] = add_line1
                 result['add_line2'] = add_line2
                 result['add_city'] = add_city

@@ -77,11 +77,11 @@ class AddressDAO:
     #                                               insert address
     # ===================================================================================================================
 
-    def insert(self, c_id,add_line1, add_line2, add_city, add_country,add_zip_code):
+    def insert(self, c_id, add_line1, add_line2, add_city, add_country, add_zip_code):
         cursor = self.conn.cursor()
-        query = "insert into address (c_id, add_line1, add_line2, add_city, add_country,add_zip_code) values " \
+        query = "insert into address (c_id, add_line1, add_line2, add_city, add_country, add_zip_code) values " \
                 "(%s, %s, %s, %s, %s, %s) returning add_id; "
-        cursor.execute(query, (c_id, add_line1, add_line2, add_city, add_country,add_zip_code))
+        cursor.execute(query, (c_id, add_line1, add_line2, add_city, add_country, add_zip_code))
         add_id = cursor.fetchone()[0]
         self.conn.commit()
         return add_id
@@ -90,11 +90,11 @@ class AddressDAO:
     #                                               update address
     # ===================================================================================================================
 
-    def put(self,add_line1, add_line2, add_city, add_country, add_zip_code, add_id):
+    def put(self, c_id, add_line1, add_line2, add_city, add_country, add_zip_code, add_id):
         cursor = self.conn.cursor()
-        query = "update address set add_line1=%s, add_line2=%s, add_city=%s, add_country=%s, add_zip_code=%s" \
+        query = "update address set c_id=%s, add_line1=%s, add_line2=%s, add_city=%s, add_country=%s, add_zip_code=%s" \
                 "where add_id=%s returning add_id; "
-        cursor.execute(query, (add_line1, add_line2, add_city, add_country, add_zip_code, add_id))
+        cursor.execute(query, (c_id, add_line1, add_line2, add_city, add_country, add_zip_code, add_id))
         add_id = cursor.fetchone()[0]
         self.conn.commit()
         return add_id

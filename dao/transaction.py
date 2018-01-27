@@ -110,7 +110,7 @@ class TransactionDAO:
     def insert(self, s_id, c_id, r_id, t_price, t_date, t_qty):
         cursor = self.conn.cursor()
         query = "insert into transaction (s_id, c_id, r_id, t_price, t_date, t_qty) values " \
-                "(%s, %s, %s, %s, %s, %s, %s) returning t_id; "
+                "(%s, %s, %s, %s, %s, %s) returning t_id; "
         cursor.execute(query, (s_id, c_id, r_id, t_price, t_date, t_qty))
         t_id = cursor.fetchone()[0]
         self.conn.commit()
@@ -122,7 +122,7 @@ class TransactionDAO:
 
     def put(self, s_id, c_id, r_id, t_price, t_date, t_qty, t_id):
         cursor = self.conn.cursor()
-        query = "update transaction set s_id=%s, c_id=%s, r_id=%s, t_price=%s, t_date=%s, t_qty=%s, " \
+        query = "update transaction set s_id=%s, c_id=%s, r_id=%s, t_price=%s, t_date=%s, t_qty=%s " \
                 "where t_id=%s returning t_id; "
         cursor.execute(query, (s_id, c_id, r_id, t_price, t_date, t_qty, t_id))
         t_id = cursor.fetchone()[0]

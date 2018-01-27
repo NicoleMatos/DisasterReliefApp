@@ -11,16 +11,6 @@
     u_age int                 -- user age to see if user is older than 18 years old
     );
 
-    create table address(                --address of user
-    add_id serial primary key,         --address id
-    c_id integer references client(c_id),    --user id
-    add_line1 varchar(25),        --address line 1
-    add_line2 varchar(25),        --address line 2
-    add_city varchar(20),        --address town
-    add_country varchar(20),         --address country
-    add_zip_code char(5)            --address zip code
-    );
-
     create table administrator(                -- administers the system (inherited from users)
     ad_id serial primary key         -- administrator id
     ) INHERITS (user_table);
@@ -33,6 +23,16 @@
     create table client(                    -- client get donations or purchases (inherited from users)
     c_id serial primary key         -- client id
     ) INHERITS (user_table);
+
+    create table address(                --address of user
+    add_id serial primary key,         --address id
+    c_id integer references client(c_id),    --user id
+    add_line1 varchar(25),        --address line 1
+    add_line2 varchar(25),        --address line 2
+    add_city varchar(20),        --address town
+    add_country varchar(20),         --address country
+    add_zip_code char(5)            --address zip code
+    );
 
     create table credit_card(                -- credit card registered by a supplier (can own more)
     cc_id serial primary key,         -- credit card id
