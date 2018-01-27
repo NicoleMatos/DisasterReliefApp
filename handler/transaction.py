@@ -82,7 +82,7 @@ class TransactionHandler:
 # ===================================================================================================================
 
     def insertTransaction(self, form):
-        if form and len(form) == 7:
+        if form and len(form) == 6:
             s_id = form['s_id']
             c_id = form['c_id']
             r_id = form['r_id']
@@ -100,7 +100,7 @@ class TransactionHandler:
                 result["t_price"] = t_price
                 result["t_date"] = t_date
                 result["t_qty"] = t_qty
-                return jsonify(Request=result), 201
+                return jsonify(Transaction=result), 201
             else:
                 return jsonify(Error="Malformed post request")
         else:
@@ -111,7 +111,7 @@ class TransactionHandler:
 # ===================================================================================================================
 
     def putTransactionByID(self, form, t_id):
-        if form and len(form) == 7:
+        if form and len(form) == 6:
             s_id = form['s_id']
             c_id = form['c_id']
             r_id = form['r_id']
@@ -120,7 +120,7 @@ class TransactionHandler:
             t_qty = form['t_qty']
             if s_id and c_id and r_id and t_price and t_date and t_qty and t_id:
                 dao = TransactionDAO()
-                t_id = dao.insert(s_id, c_id, r_id, t_price, t_date, t_qty, t_id)
+                t_id = dao.put(s_id, c_id, r_id, t_price, t_date, t_qty, t_id)
                 result = {}
                 result["t_id"] = t_id
                 result["s_id"] = s_id
@@ -129,7 +129,7 @@ class TransactionHandler:
                 result["t_price"] = t_price
                 result["t_date"] = t_date
                 result["t_qty"] = t_qty
-                return jsonify(Request=result), 201
+                return jsonify(Transaction=result), 201
             else:
                 return jsonify(Error="Malformed post request")
         else:

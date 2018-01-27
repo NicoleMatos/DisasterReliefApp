@@ -105,7 +105,7 @@ class RequestHandler:
         if form and len(form) == 4:
             c_id = form['c_id']
             r_id = form['r_id']
-            req_qty = form['a_price']
+            req_qty = form['req_qty']
             req_date = form['req_date']
             if c_id and r_id and req_qty and req_date:
                 dao = RequestDAO()
@@ -130,11 +130,11 @@ class RequestHandler:
         if form and len(form) == 4:
             c_id = form['c_id']
             r_id = form['r_id']
-            req_qty = form['a_price']
+            req_qty = form['req_qty']
             req_date = form['req_date']
             if c_id and r_id and req_qty and req_date and req_id:
                 dao = RequestDAO()
-                req_id = dao.insert(c_id, r_id, req_qty, req_date, req_id)
+                req_id = dao.put(c_id, r_id, req_qty, req_date, req_id)
                 result = {}
                 result["req_id"] = req_id
                 result["c_id"] = c_id

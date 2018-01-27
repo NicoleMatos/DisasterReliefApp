@@ -109,16 +109,16 @@ class AnnouncementHandler:
             a_curr_qty = form['a_curr_qty']
             if s_id and r_id and a_price and a_date and a_sold_out and a_initial_qty and a_curr_qty:
                 dao = AnnouncementDAO()
-                s_id = dao.insert(s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty)
+                a_id = dao.insert(s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty)
                 result = {}
+                result["a_id"] = a_id
                 result["s_id"] = s_id
-                result["u_email"] = s_id
-                result["u_password"] = r_id
-                result["u_name"] = a_price
-                result["u_last_name"] = a_date
-                result["u_region"] = a_sold_out
-                result["u_age"] = a_initial_qty
-                result["s_bank_account"] = a_curr_qty
+                result["r_id"] = r_id
+                result["a_price"] = a_price
+                result["a_date"] = a_date
+                result["a_sold_out"] = a_sold_out
+                result["a_initial_qty"] = a_initial_qty
+                result["a_curr_qty"] = a_curr_qty
                 return jsonify(Announcement=result), 201
             else:
                 return jsonify(Error="Malformed post request")
@@ -140,17 +140,16 @@ class AnnouncementHandler:
             a_curr_qty = form['a_curr_qty']
             if s_id and r_id and a_price and a_date and a_sold_out and a_initial_qty and a_curr_qty and a_id:
                 dao = AnnouncementDAO()
-                s_id = dao.insert(s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty, a_id)
+                a_id = dao.put(s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty, a_id)
                 result = {}
                 result["a_id"] = a_id
                 result["s_id"] = s_id
-                result["u_email"] = s_id
-                result["u_password"] = r_id
-                result["u_name"] = a_price
-                result["u_last_name"] = a_date
-                result["u_region"] = a_sold_out
-                result["u_age"] = a_initial_qty
-                result["s_bank_account"] = a_curr_qty
+                result["r_id"] = r_id
+                result["a_price"] = a_price
+                result["a_date"] = a_date
+                result["a_sold_out"] = a_sold_out
+                result["a_initial_qty"] = a_initial_qty
+                result["a_curr_qty"] = a_curr_qty
                 return jsonify(Announcement=result), 201
             else:
                 return jsonify(Error="Malformed post request")
