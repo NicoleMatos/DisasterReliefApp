@@ -120,34 +120,54 @@ def getSupplierByClientID(c_id):
 #                                           transactions routes
 # =======================================================================================================================
 
-@app.route('/transactions/')
+@app.route('/transactions/', methods=['GET', 'POST'])
 def getAllTransactions():
-    if not request.args:
-        return TransactionHandler().getAllTransactions()
+    if request.method == 'POST':
+        return TransactionHandler().insertTransaction(request.form)
     else:
-        return TransactionHandler().searchTransactions(request.args)
+        if not request.args:
+            return TransactionHandler().getAllTransactions()
+        else:
+            return TransactionHandler().searchTransactions(request.args)
 
 
-@app.route('/transactions/<int:t_id>/')
+@app.route('/transactions/<int:t_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getTransactionByID(t_id):
-    return TransactionHandler().getTransactionByID(t_id)
+    if request.method == 'GET':
+        return TransactionHandler().getTransactionByID(t_id)
+    elif request.method == 'PUT':
+        return TransactionHandler().putTransactionByID(request.form, t_id)
+    elif request.method == 'DELETE':
+        return TransactionHandler().deleteTransactionByID(t_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 # =======================================================================================================================
 #                                           announcements routes
 # =======================================================================================================================
 
-@app.route('/announcements/')
+@app.route('/announcements/', methods=['GET', 'POST'])
 def getAllAnnouncements():
-    if not request.args:
-        return AnnouncementHandler().getAllAnnouncements()
+    if request.method == 'POST':
+        return AnnouncementHandler().insertAnnouncement(request.form)
     else:
-        return AnnouncementHandler().searchAnnouncements(request.args)
+        if not request.args:
+            return AnnouncementHandler().getAllAnnouncements()
+        else:
+            return AnnouncementHandler().searchAnnouncements(request.args)
 
 
-@app.route('/announcements/<int:a_id>/')
+@app.route('/announcements/<int:a_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getAnnouncementByID(a_id):
-    return AnnouncementHandler().getAnnouncementByID(a_id)
+    if request.method == 'GET':
+        return AnnouncementHandler().getAnnouncementByID(a_id)
+    elif request.method == 'PUT':
+        return AnnouncementHandler().putAnnouncementByID(request.form, a_id)
+    elif request.method == 'DELETE':
+        return AnnouncementHandler().deleteAnnouncementByID(a_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 @app.route('/announcements/resources/')
@@ -159,17 +179,27 @@ def getResourcestByAnnouncements():
 #                                           requests routes
 # =======================================================================================================================
 
-@app.route('/requests/')
+@app.route('/requests/', methods=['GET', 'POST'])
 def getAllRequests():
-    if not request.args:
-        return RequestHandler().getAllRequests()
+    if request.method == 'POST':
+        return RequestHandler().insertRequest(request.form)
     else:
-        return RequestHandler().searchRequests(request.args)
+        if not request.args:
+            return RequestHandler().getAllRequests()
+        else:
+            return RequestHandler().searchRequests(request.args)
 
 
-@app.route('/requests/<int:req_id>/')
+@app.route('/requests/<int:req_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getRequestByID(req_id):
-    return RequestHandler().getRequestByID(req_id)
+    if request.method == 'GET':
+        return RequestHandler().getRequestByID(req_id)
+    elif request.method == 'PUT':
+        return RequestHandler().putRequestByID(request.form, req_id)
+    elif request.method == 'DELETE':
+        return RequestHandler().deleteRequestByID(req_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 @app.route('/requests/<int:req_id>/resources/')
