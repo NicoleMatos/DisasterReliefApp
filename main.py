@@ -253,17 +253,27 @@ def getCCardByID(cc_id):
 #                                        addresses routes
 # =======================================================================================================================
 
-@app.route('/addresses/')
+@app.route('/addresses/', methods=['GET', 'POST'])
 def getAllAddresses():
-    if not request.args:
-        return AddressHandler().getAllAddresses()
+    if request.method == 'POST':
+        return AddressHandler().insertAddress(request.form)
     else:
-        return AddressHandler().searchAddresses(request.args)
+        if not request.args:
+            return AddressHandler().getAllAddresses()
+        else:
+            return AddressHandler().searchAddresses(request.args)
 
 
-@app.route('/addresses/<int:cc_id>/')
+@app.route('/addresses/<int:add_id>/', methods=['GET', 'PUT', 'DELETE'])
 def getAddressByID(add_id):
-    return AddressHandler().getAddressByID(add_id)
+    if request.method == 'GET':
+        return AddressHandler().getAddressByID(add_id)
+    elif request.method == 'PUT':
+        return AddressHandler().putAddressID(request.form, add_id)
+    elif request.method == 'DELETE':
+        return AddressHandler().deleteAddressByID(add_id)
+    else:
+        return jsonify(Error="Method not allowed"), 405
 
 
 # =======================================================================================================================

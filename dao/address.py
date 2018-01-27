@@ -74,14 +74,38 @@ class AddressDAO:
         return result
 
     # ===================================================================================================================
-    #                                           insert address
+    #                                               insert address
     # ===================================================================================================================
 
-    def insert(self, u_id, add_line1, add_line2, add_city, add_country, add_zip_code):
+    def insert(self, c_id,add_line1, add_line2, add_city, add_country,add_zip_code):
         cursor = self.conn.cursor()
-        query = "insert into users(u_id, add_line1, add_line2, add_city, add_country, add_zip_code) values (%s,%s,%s," \
-                "%s, %s, %s) returning add_id; "
-        cursor.execute(query, (u_id, add_line1, add_line2, add_city, add_country, add_zip_code))
+        query = "insert into address (c_id, add_line1, add_line2, add_city, add_country,add_zip_code) values " \
+                "(%s, %s, %s, %s, %s, %s) returning add_id; "
+        cursor.execute(query, (c_id, add_line1, add_line2, add_city, add_country,add_zip_code))
         add_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return add_id
+
+    # ===================================================================================================================
+    #                                               update address
+    # ===================================================================================================================
+
+    def put(self,add_line1, add_line2, add_city, add_country, add_zip_code, add_id):
+        cursor = self.conn.cursor()
+        query = "update address set add_line1=%s, add_line2=%s, add_city=%s, add_country=%s, add_zip_code=%s" \
+                "where add_id=%s returning add_id; "
+        cursor.execute(query, (add_line1, add_line2, add_city, add_country, add_zip_code, add_id))
+        add_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return add_id
+
+    # ===================================================================================================================
+    #                                               delete address
+    # ===================================================================================================================
+
+    def delete(self, add_id):
+        cursor = self.conn.cursor()
+        query = "delete from address where add_id=%s; "
+        cursor.execute(query, (add_id,))
         self.conn.commit()
         return add_id
