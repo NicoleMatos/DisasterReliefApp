@@ -79,8 +79,44 @@ class RequestDAO:
     def getResourcesByRequests(self):
         cursor = self.conn.cursor()
         query = "select r_id, r_category, r_name, r_description from request natural inner join resource;"
-        cursor.execute(query,)
+        cursor.execute(query, )
         result = []
         for row in cursor:
             result.append(row)
         return result
+
+    # ===================================================================================================================
+    #                                               insert request
+    # ===================================================================================================================
+
+    def insert(self, c_id, r_id, req_qty, req_date):
+        cursor = self.conn.cursor()
+        query = "insert into request (c_id, r_id, req_qty, req_date) values " \
+                "(%s, %s, %s, %s) returning req_id; "
+        cursor.execute(query, (c_id, r_id, req_qty, req_date))
+        req_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return req_id
+
+    # ===================================================================================================================
+    #                                               put request
+    # ===================================================================================================================
+
+    def put(self, c_id, r_id, req_qty, req_date, req_id):
+        cursor = self.conn.cursor()
+        query = "update request set c_id=%s, r_id=%s, req_qty=%s, req_date=%s where req_id=%s returning req_id; "
+        cursor.execute(query, (c_id, r_id, req_qty, req_date, req_id))
+        req_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return req_id
+
+    # ===================================================================================================================
+    #                                               delete request
+    # ===================================================================================================================
+
+    def delete(self, req_id):
+        cursor = self.conn.cursor()
+        query = "delete from request where req_id=%s; "
+        cursor.execute(query, (req_id,))
+        self.conn.commit()
+        return req_id

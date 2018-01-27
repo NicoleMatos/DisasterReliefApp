@@ -102,6 +102,43 @@ class AnnouncementDAO:
             result.append(row)
         return result
 
+    # ===================================================================================================================
+    #                                               insert announcement
+    # ===================================================================================================================
+
+    def insert(self, s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty):
+        cursor = self.conn.cursor()
+        query = "insert into announcement (s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty) values " \
+                "(%s, %s, %s, %s, %s, %s, %s) returning a_id; "
+        cursor.execute(query, (s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty))
+        a_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return a_id
+
+    # ===================================================================================================================
+    #                                               put announcement
+    # ===================================================================================================================
+
+    def put(self, s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty, a_id):
+        cursor = self.conn.cursor()
+        query = "update announcement set s_id=%s, r_id=%s, a_price=%s, a_date=%s, a_sold_out=%s, a_initial_qty=%s, " \
+                "a_curr_qty=%s where a_id=%s returning a_id; "
+        cursor.execute(query, (s_id, r_id, a_price, a_date, a_sold_out, a_initial_qty, a_curr_qty, a_id))
+        a_id = cursor.fetchone()[0]
+        self.conn.commit()
+        return a_id
+
+    # ===================================================================================================================
+    #                                               delete announcement
+    # ===================================================================================================================
+
+    def delete(self, a_id):
+        cursor = self.conn.cursor()
+        query = "delete from announcement where a_id=%s; "
+        cursor.execute(query, (a_id,))
+        self.conn.commit()
+        return a_id
+
 
 
 

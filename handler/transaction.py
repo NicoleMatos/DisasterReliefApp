@@ -76,3 +76,73 @@ class TransactionHandler:
         else:
             result = self.build_transaction_dict(row)
         return jsonify(Transaction=result)
+
+# ===================================================================================================================
+#                                          insert transaction
+# ===================================================================================================================
+
+    def insertTransaction(self, form):
+        if form and len(form) == 7:
+            s_id = form['s_id']
+            c_id = form['c_id']
+            r_id = form['r_id']
+            t_price = form['t_price']
+            t_date = form['t_date']
+            t_qty = form['t_qty']
+            if s_id and c_id and r_id and t_price and t_date and t_qty:
+                dao = TransactionDAO()
+                t_id = dao.insert(s_id, c_id, r_id, t_price, t_date, t_qty)
+                result = {}
+                result["t_id"] = t_id
+                result["s_id"] = s_id
+                result["c_id"] = c_id
+                result["r_id"] = r_id
+                result["t_price"] = t_price
+                result["t_date"] = t_date
+                result["t_qty"] = t_qty
+                return jsonify(Request=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+# ===================================================================================================================
+#                                          put transaction
+# ===================================================================================================================
+
+    def putTransactionByID(self, form, t_id):
+        if form and len(form) == 7:
+            s_id = form['s_id']
+            c_id = form['c_id']
+            r_id = form['r_id']
+            t_price = form['t_price']
+            t_date = form['t_date']
+            t_qty = form['t_qty']
+            if s_id and c_id and r_id and t_price and t_date and t_qty and t_id:
+                dao = TransactionDAO()
+                t_id = dao.insert(s_id, c_id, r_id, t_price, t_date, t_qty, t_id)
+                result = {}
+                result["t_id"] = t_id
+                result["s_id"] = s_id
+                result["c_id"] = c_id
+                result["r_id"] = r_id
+                result["t_price"] = t_price
+                result["t_date"] = t_date
+                result["t_qty"] = t_qty
+                return jsonify(Request=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+# ===================================================================================================================
+#                                          delete transaction
+# ===================================================================================================================
+
+    def deleteTransactionByID(self, t_id):
+        dao = TransactionDAO()
+        if not dao.getTransactionById(t_id):
+            return jsonify(Error="Transaction not found."), 404
+        else:
+            dao.delete(t_id)
+            return jsonify(DeleteStatus="OK"), 200

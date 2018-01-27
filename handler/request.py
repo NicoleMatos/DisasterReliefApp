@@ -96,3 +96,65 @@ class RequestHandler:
                 result = self.build_resource_dict(row)
                 result_list.append(result)
             return jsonify(Resources=result_list)
+
+# ===================================================================================================================
+#                                          insert request
+# ===================================================================================================================
+
+    def insertRequest(self, form):
+        if form and len(form) == 4:
+            c_id = form['c_id']
+            r_id = form['r_id']
+            req_qty = form['a_price']
+            req_date = form['req_date']
+            if c_id and r_id and req_qty and req_date:
+                dao = RequestDAO()
+                req_id = dao.insert(c_id, r_id, req_qty, req_date)
+                result = {}
+                result["req_id"] = req_id
+                result["c_id"] = c_id
+                result["r_id"] = r_id
+                result["req_qty"] = req_qty
+                result["req_date"] = req_date
+                return jsonify(Request=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+# ===================================================================================================================
+#                                          put request
+# ===================================================================================================================
+
+    def putRequestByID(self, form, req_id):
+        if form and len(form) == 4:
+            c_id = form['c_id']
+            r_id = form['r_id']
+            req_qty = form['a_price']
+            req_date = form['req_date']
+            if c_id and r_id and req_qty and req_date and req_id:
+                dao = RequestDAO()
+                req_id = dao.insert(c_id, r_id, req_qty, req_date, req_id)
+                result = {}
+                result["req_id"] = req_id
+                result["c_id"] = c_id
+                result["r_id"] = r_id
+                result["req_qty"] = req_qty
+                result["req_date"] = req_date
+                return jsonify(Request=result), 201
+            else:
+                return jsonify(Error="Malformed post request")
+        else:
+            return jsonify(Error="Malformed post request")
+
+# ===================================================================================================================
+#                                          delete request
+# ===================================================================================================================
+
+    def deleteRequestByID(self, req_id):
+        dao = RequestDAO()
+        if not dao.getRequestById(req_id):
+            return jsonify(Error="Request not found."), 404
+        else:
+            dao.delete(req_id)
+            return jsonify(DeleteStatus="OK"), 200
