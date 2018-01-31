@@ -25,24 +25,26 @@ class RequestHandler:
     # ===================================================================================================================
 
     def searchRequests(self, args):
-        client = args.get('client')
-        date = args.get('date')
+        client = args.get('c_id')
+        date = args.get('req_date')
+        region = args.get('region')
         dao = RequestDAO()
-        if (len(args) == 2) and date and client:
+        if (len(args) == 3) and client and date and region:
             request_list = dao.getRequestsByClientAndDate(client, date)
         elif (len(args) == 1) and client:
             request_list = dao.getRequestsByClient(client)
         elif (len(args) == 1) and date:
             request_list = dao.getRequestsByDate(date)
+        elif (len(args) == 1) and region:
+            request_list = dao.getRequestsByRegion(region)
         else:
             return jsonify(Error="Malformed query string"), 400
-        if not request_list:
+        result_list = []
+        for row in request_list:
+            result = self.build_request_dict(row)
+            result_list.append(result)
+        if len(result_list) == 0:
             return jsonify(Error="Request Not Found"), 404
-        else:
-            result_list = []
-            for row in request_list:
-                result = self.build_request_dict(row)
-                result_list.append(result)
         return jsonify(Request=result_list)
 
 
