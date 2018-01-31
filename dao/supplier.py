@@ -10,6 +10,7 @@ class SupplierDAO:
                                                             pg_config['passwd'],
                                                             pg_config['host'],
                                                             pg_config['port'])
+        self.conn = psycopg2._connect(connection_url)
 
     # ===================================================================================================================
     #                                           get all suppliers
