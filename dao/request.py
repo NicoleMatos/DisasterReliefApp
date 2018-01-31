@@ -76,7 +76,7 @@ class RequestDAO:
 
     def getRequestsByRegion(self, region):
         cursor = self.conn.cursor()
-        query = "select req_id, req_qty, req_date from request natural inner join client where u_region = %s;"
+        query = "select req_id, c_id, r_id, req_qty, req_date from request natural inner join client where u_region = %s;"
         cursor.execute(query, (region,))
         result = []
         for row in cursor:
